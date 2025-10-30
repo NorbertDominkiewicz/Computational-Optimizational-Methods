@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api")
 public class BipartiteController {
-    @GetMapping("/bisection")
+    @GetMapping("/bipartite")
     public BipartiteResult solve(
             @RequestParam double a,
             @RequestParam double b,
