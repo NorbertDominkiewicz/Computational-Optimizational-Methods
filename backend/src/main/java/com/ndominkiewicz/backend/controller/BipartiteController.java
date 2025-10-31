@@ -10,12 +10,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api")
 public class BipartiteController {
+    private final BipartiteService bipartiteService;
+    public BipartiteController(BipartiteService bipartiteService) {
+        this.bipartiteService = bipartiteService;
+    }
     @GetMapping("/bipartite")
     public BipartiteResult solve(
             @RequestParam double a,
             @RequestParam double b,
             @RequestParam double e,
             @RequestParam String equation) {
-        return BipartiteService.solve(a, b, e, equation);
+        return bipartiteService.solve(a, b, e, equation);
     }
 }

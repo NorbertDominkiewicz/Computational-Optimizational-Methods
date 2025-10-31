@@ -1,9 +1,5 @@
 package com.ndominkiewicz.frontend.controller.view;
 
-import com.ndominkiewicz.frontend.model.ViewController;
-import com.ndominkiewicz.frontend.service.BisectionService;
-import javafx.scene.Node;
-
 import com.ndominkiewicz.frontend.controller.component.EntryController;
 import com.ndominkiewicz.frontend.model.BipartiteResult;
 import com.ndominkiewicz.frontend.model.Roll;
@@ -20,10 +16,10 @@ import javafx.scene.layout.StackPane;
 
 import java.util.ArrayList;
 
-public class BisectionController implements ViewController {
+public class BipartiteController implements ViewController {
     private Roll roll;
     private EntryController entryController;
-    private final BisectionService service = new BisectionService();
+    private final BipartiteService service = new BipartiteService();
     private final ArrayList<Node> nodes = new ArrayList<>();
     @FXML
     private StackPane rollContainer;
@@ -37,7 +33,7 @@ public class BisectionController implements ViewController {
     private NumberAxis yAxis;
     public void addComponents(Roll roll) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/ndominkiewicz/frontend/fxml/components/" + (roll.equals(Roll.ENTRY) ? "input" : "result") + ".fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/ndominkiewicz/frontend/fxml/components/" + (roll.equals(Roll.ENTRY) ? "entry" : "result") + ".fxml"));
             Node element = loader.load();
             nodes.add(element);
             entryController = loader.getController();

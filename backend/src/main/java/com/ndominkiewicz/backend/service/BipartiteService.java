@@ -1,77 +1,120 @@
 package com.ndominkiewicz.backend.service;
-
-import com.google.common.base.Function;
 import com.ndominkiewicz.backend.model.BipartiteResult;
 import com.ndominkiewicz.backend.model.MINMAX;
-
+import com.ndominkiewicz.backend.model.Point;
 import org.springframework.stereotype.Service;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
 
 @Service
 public class BipartiteService {
-
-    public static BipartiteResult solve(double a, double b, double e, String equation) {
-        Function<Double, Double> function = getFunction(equation);
-        MINMAX mode = evaluateMode(equation);
-        return BipartiteService.solve(a, b, e, function, mode);
+    public double a, b;
+    public double L;
+    public double x1, x2;
+    public double xsr;
+    public double e;
+    public int iterations;
+    public MINMAX mode;
+    public double [] points;
+    public Function<Double, Double> function;
+    public List<Point> functionPoints;
+    public BipartiteResult solve(double a, double b, double e, String equation) {
+        this.a = a;
+        this.b = b;
+        this.e = e;
+        this.mode = MINMAX.MAXIMUM;
+        this.functionPoints = new ArrayList<>();
+        this.function = x -> {
+            Expression expression = new ExpressionBuilder(equation)
+                    .variable("x").build().setVariable("x", x);
+            return expression.evaluate();
+    };
+        this.iterations = 1;
+        this.initializeFunctionPoints(100);
+        this.step1();
+        return step2();
+    }
+    public void initializeFunctionPoints(int points) {
+        double range = b - a;
+        for(int i = 0; i <= points; i++) {
+            double x = a + (range * i / points);
+            double y = function.apply(x);
+            functionPoints.add(new Point(x, y));
+        }
+    }
+    private void step1() {
+        xsr = (a + b) / 2;
     }
 
-    public static BipartiteResult solve(double a, double b, double e, Function<Double, Double> function, MINMAX mode) {
-        step2(a, b, step1(a, b), function, mode);
-        return null;
+    private BipartiteResult step2() {
+        L = b - a;
+        x1 = a + (L / 4);
+        x2 = b - (L / 4);
+        return step3();
     }
 
-    private static double step1(double a, double b) {
-        return (a + b) / 2;
-    }
-
-    private static void step2(double a, double b, double xsr, Function<Double, Double> function, MINMAX mode) {
-        double L = b - a;
-        double x1 = a + (L / 4);
-        double x2 = b - (L / 4);
-        step3(a, b, xsr, L, x1, x2, function, mode);
-    }
-
-    private static void step3(double a, double b, double xsr, double L, double x1, double x2, Function<Double, Double> function, MINMAX mode) {
+    private BipartiteResult step3() {
         switch (mode) {
             case MINIMUM -> {
                 if(function.apply(x1) < function.apply(xsr)) {
                     b = xsr;
                     xsr = x1;
-                    step5();
-                } 
-            }
-        }
-    }
-
-    private static MINMAX evaluateMode(String equation) {
-        /* to be made */
-        return MINMAX.MAXIMUM;
-    }
-
-    private static Function<Double, Double> getFunction(String equation) {
-        if (equation == null || equation.trim().isEmpty()) {
-            throw new IllegalArgumentException("Equation cannot be null or empty");
-        }
-        return x -> {
-            try {
-                Expression expression = new ExpressionBuilder(equation)
-                        .variables("x", "X")
-                        .build()
-                        .setVariable("x", x)
-                        .setVariable("X", x);
-
-                double result = expression.evaluate();
-
-                if (Double.isNaN(result) || Double.isInfinite(result)) {
-                    throw new ArithmeticException("Invalid result: " + result);
+                    return step5();
+                } else {
+                    return step4();
                 }
-                return result;
-            } catch (Exception e) {
-                throw new RuntimeException("Failed to evaluate equation: " + equation + " for x=" + x, e);
             }
-        };
+            case MAXIMUM -> {
+                if(function.apply(x1) > function.apply(xsr)) {
+                    b = xsr;
+                    xsr = x1;
+                    return step5();
+                } else {
+                    return step4();
+                }
+            }
+        }
+        return null;
+    }
+
+    private BipartiteResult step4() {
+        switch (mode) {
+            case MINIMUM -> {
+                if(function.apply(x2) < function.apply(xsr)) {
+                    a = xsr;
+                    xsr = x2;
+                    return step5();
+                } else {
+                    a = x1;
+                    b = x2;
+                    return step5();
+                }
+            }
+            case MAXIMUM -> {
+                if(function.apply(x2) > function.apply(xsr)) {
+                    a = xsr;
+                    xsr = x2;
+                    return step5();
+                } else {
+                    a = x1;
+                    b = x2;
+                    return step5();
+                }
+            }
+        }
+        return null;
+    }
+
+    private BipartiteResult step5() {
+        if (L <= e) {
+            return new BipartiteResult(a, b, L, xsr, x1, x2, e, iterations, functionPoints);
+        } else {
+            iterations++;
+            return step2();
+        }
     }
 }

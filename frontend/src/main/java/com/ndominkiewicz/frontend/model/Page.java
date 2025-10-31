@@ -1,8 +1,8 @@
 package com.ndominkiewicz.frontend.model;
 
 public enum Page {
-    BISECTION,
+    BIPARTITE,
     FIBONACCI,
-    LINEARCARLO,
-    NONLINEARCARLO
+    BISECTION,
+    NEWTON
 }
