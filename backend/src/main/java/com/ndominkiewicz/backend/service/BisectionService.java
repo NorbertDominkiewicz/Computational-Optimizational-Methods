@@ -1,7 +1,7 @@
 package com.ndominkiewicz.backend.service;
 
 import com.ndominkiewicz.backend.model.BisectionResult;
-import com.ndominkiewicz.backend.model.Point;
+import com.ndominkiewicz.backend.utils.Point;
 import com.ndominkiewicz.backend.utils.Derivative;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
@@ -19,18 +19,17 @@ public class BisectionService {
     Function<Double, Double> function;
     Function<Double, Double> derFunction;
     List<Point> functionPoints = new ArrayList<>();
-    List<Point> derFunctionPoints = new ArrayList<>();
     public BisectionResult solve(double a, double b, double e, String equation){
         this.a = a;
         this.b = b;
         this.e = e;
-        String derivative = Derivative.obliczPochodna(equation);
         this.iterations = 1;
         this.derFunction = x -> {
-            Expression expression = new ExpressionBuilder(derivative)
+            Expression expression = new ExpressionBuilder(equation)
                     .variable("x").build().setVariable("x", x);
             return expression.evaluate();
         };
+        this.initializeFunctionPoints(100);
         return canDo() ? step1() : null;
     }
     public BisectionResult solve(){
@@ -51,7 +50,7 @@ public class BisectionService {
     }
     BisectionResult step2() {
         if(derFunction.apply(xsr) == 0) {
-            return new BisectionResult(xsr, iterations, functionPoints, derFunctionPoints);
+            return new BisectionResult(a, b, e, xsr, iterations, functionPoints);
         } else {
             if (derFunction.apply(xsr) * derFunction.apply(a) < 0) {
                 b = xsr;
@@ -63,22 +62,25 @@ public class BisectionService {
     }
     BisectionResult step3() {
         if(Math.abs(derFunction.apply(xsr)) < e){
-            return new BisectionResult(xsr, iterations, functionPoints, derFunctionPoints);
+            return new BisectionResult(a, b, e, xsr, iterations, functionPoints);
         }
         iterations ++;
         return step1();
     }
     public void initializeFunctionPoints(int points) {
         double range = b - a;
-        for(int i = 0; i <= points; i++) {
-            double x = a + (range * i / points);
-            double y = function.apply(x);
-            functionPoints.add(new Point(x, y));
-        }
-        for(int i = 0; i <= points; i++) {
-            double x = a + (range * i / points);
-            double y = derFunction.apply(x);
-            derFunctionPoints.add(new Point(x, y));
+        if(function == null) {
+            for(int i = 0; i <= points; i++) {
+                double x = a + (range * i / points);
+                double y = derFunction.apply(x);
+                functionPoints.add(new Point(x, y));
+            }
+        } else {
+            for(int i = 0; i <= points; i++) {
+                double x = a + (range * i / points);
+                double y = function.apply(x);
+                functionPoints.add(new Point(x, y));
+            }
         }
     }
 }

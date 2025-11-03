@@ -1,7 +1,7 @@
 package com.ndominkiewicz.backend.service;
 import com.ndominkiewicz.backend.model.BipartiteResult;
 import com.ndominkiewicz.backend.model.MINMAX;
-import com.ndominkiewicz.backend.model.Point;
+import com.ndominkiewicz.backend.utils.Point;
 import org.springframework.stereotype.Service;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
@@ -111,7 +111,7 @@ public class BipartiteService {
 
     private BipartiteResult step5() {
         if (L <= e) {
-            return new BipartiteResult("Maksimum", iterations, a, b, L, x1, x2, xsr);
+            return new BipartiteResult("Maksimum", iterations, a, b, L, x1, x2, xsr, functionPoints);
         } else {
             iterations++;
             return step2();

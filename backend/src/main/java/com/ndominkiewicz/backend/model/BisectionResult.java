@@ -1,7 +1,9 @@
 package com.ndominkiewicz.backend.model;
 
+import com.ndominkiewicz.backend.utils.Point;
+
 import java.util.List;
 
-public record BisectionResult(double xsr, int iterations, List<Point> functionPoints, List<Point> derFunctionPoints) {
+public record BisectionResult(double a, double b, double e, double xsr, int iterations, List<Point> functionPoints) implements Result {
 
 }

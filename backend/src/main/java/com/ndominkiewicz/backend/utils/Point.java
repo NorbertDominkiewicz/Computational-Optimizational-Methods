@@ -1,4 +1,4 @@
-package com.ndominkiewicz.backend.model;
+package com.ndominkiewicz.backend.utils;
 
 public class Point {
     private final double x, y;

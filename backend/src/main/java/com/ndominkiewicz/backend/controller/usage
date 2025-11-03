@@ -1,0 +1,12 @@
+1. Bipartite:
+http://localhost:8080/api/v1/bipartite?a=-6&b=-1&e=0.1&equation=x%5E3-3*x%5E2-20*x+1
+2. Fibonacci:
+http://localhost:8080/api/v1/fibonacci?a=-6&b=-1&e=0.01&equation=x%5E3-3*x%5E2-20*x+1
+3. Bisection:
+http://localhost:8080/api/v1/bisection?a=-6&b=-1&e=0.01&equation=3*x%5E2-6*x-20
+4. Newton:
+http://localhost:8080/api/v1/newton?a=-6&b=-1&e=0.01&firstDerivative=3*x%5E2-6*x-20&secondDerivative=6*x-6&thirdDerivative=6
+5. Secant:
+http://localhost:8080/api/v1/secant?a=-6&b=-1&e=0.01&firstDerivative=3*x%5E2-6*x-20&thirdDerivative=6
+6. Golden Ratio:
+http://localhost:8080/api/v1/goldenratio?a=-6&b=-1&e=0.1&equation=x%5E3-3*x%5E2-20*x+1

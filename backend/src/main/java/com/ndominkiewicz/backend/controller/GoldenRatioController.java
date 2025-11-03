@@ -1,7 +1,7 @@
 package com.ndominkiewicz.backend.controller;
 
-import com.ndominkiewicz.backend.model.BisectionResult;
-import com.ndominkiewicz.backend.service.BisectionService;
+import com.ndominkiewicz.backend.model.GoldenRatioResult;
+import com.ndominkiewicz.backend.service.GoldenRatioService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -9,18 +9,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1")
-public class BisectionController {
-    private final BisectionService bisectionService;
-    public BisectionController(BisectionService bisectionService) {
-        this.bisectionService = bisectionService;
+public class GoldenRatioController {
+    private final GoldenRatioService goldenRatioService;
+
+    public GoldenRatioController(GoldenRatioService goldenRatioService) {
+        this.goldenRatioService = goldenRatioService;
     }
-    @GetMapping("/bisection")
-    public BisectionResult solve(
+    @GetMapping("/goldenratio")
+    public GoldenRatioResult solve(
             @RequestParam double a,
             @RequestParam double b,
             @RequestParam double e,
             @RequestParam String equation
     ) {
-        return bisectionService.solve(a, b, e, equation);
+        return goldenRatioService.solve(a, b ,e, equation);
     }
 }

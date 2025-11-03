@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 public class BipartiteController {
     private final BipartiteService bipartiteService;
     public BipartiteController(BipartiteService bipartiteService) {
