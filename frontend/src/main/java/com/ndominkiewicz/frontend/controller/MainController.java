@@ -1,0 +1,136 @@
+package com.ndominkiewicz.frontend.controller;
+
+import com.ndominkiewicz.frontend.Launcher;
+import com.ndominkiewicz.frontend.controller.view.BipartiteController;
+import com.ndominkiewicz.frontend.controller.view.HomeController;
+import com.ndominkiewicz.frontend.model.View;
+import com.ndominkiewicz.frontend.model.ViewController;
+import javafx.application.Platform;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.StackPane;
+
+import java.net.URL;
+import java.util.*;
+
+/**
+ * @author Norbert Dominkiewicz
+ */
+
+public class MainController implements Initializable {
+    private final Map<View, ViewController> views = new TreeMap<>();
+    private View currentView;
+    /**
+     * FXML Elements
+     * */
+    @FXML private FlowPane asidePanel;
+    @FXML private Label viewLabel;
+    @FXML private StackPane contentContainer;
+    /**
+     * Following injections will refer to Button JavaFX objects.
+     * Some of it will direct us towards different view and the others
+     * are for app based controls like closeButton
+     */
+    @FXML private Button homeButton;
+    @FXML private Button bipartiteButton;
+    @FXML private Button closeButton;
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        initActions();
+        initViews();
+        changeView(View.HOME);
+    }
+    /**
+     * Method that loads up listeners for actions for various elements at once
+     */
+    private void initActions() {
+        closeButton.setOnAction(actionEvent -> Launcher.close());
+        homeButton.setOnAction(actionEvent -> changeView(View.HOME));
+        bipartiteButton.setOnAction(actionEvent -> changeView(View.BIPARTITE));
+    }
+    /**
+     * Method that loads up all views possible to use at once
+     */
+    private void initViews() {
+        initView(View.HOME);
+        initView(View.BIPARTITE);
+    }
+
+    /**
+     * Method that loads up the view given as an argument.
+     * The crucial here is method getController() which returns us controller
+     * based on view and its controller from fxml file
+     */
+    private void initView(View view) {
+        ViewController controller = getController(view);
+        switch (view) {
+            case HOME -> {
+                HomeController homeController = (HomeController) controller;
+                views.put(view, homeController);
+            }
+            case BIPARTITE -> {
+                BipartiteController bipartiteController = (BipartiteController) controller;
+                views.put(view, bipartiteController);
+            }
+        }
+    }
+    private ViewController getController(View view) {
+        try {
+            String fxml = "";
+            switch (view) {
+                case HOME -> fxml = "home";
+                case BISECTION -> fxml = "bisection";
+                case BIPARTITE -> fxml = "bipartite";
+            }
+            FXMLLoader loader = new FXMLLoader(Launcher.class.getResource("/com/ndominkiewicz/frontend/fxml/views/" + fxml + ".fxml"));
+            Node node = loader.load();
+            return loader.getController();
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+    /**
+     * Method that allows user to change view.
+     * First it checks if the given view is actually being displayed, if not
+     * it seeks for a view in views Map that seeks with a given view and sets up
+     * a new Node
+     */
+    private void changeView(View view) {
+        if(!(view.equals(currentView))) {
+            contentContainer.getChildren().clear();
+            for(Map.Entry<View, ViewController> entry : views.entrySet()) {
+                if(entry.getKey().equals(view)) {
+                    Node node = entry.getValue().getView();
+                    contentContainer.getChildren().add(node);
+                    contentContainer.setAlignment(Pos.CENTER);
+                    currentView = view;
+                    changeTitle(currentView);
+                    changeActiveStyle(currentView);
+                }
+            }
+        }
+    }
+    /**
+     * Method for changing the label of a current view with a given value
+     */
+    private void changeTitle(View view) {
+        switch (view) {
+            case HOME -> Platform.runLater(() -> viewLabel.setText("Home"));
+            case BIPARTITE -> Platform.runLater(() -> viewLabel.setText("Metoda Dwudzielna"));
+        }
+    }
+    private void changeActiveStyle(View view) {
+        homeButton.getStyleClass().remove("active");
+        bipartiteButton.getStyleClass().remove("active");
+        switch (view) {
+            case HOME -> homeButton.getStyleClass().add("active");
+            case BIPARTITE -> bipartiteButton.getStyleClass().add("active");
+        }
+    }
+}

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Pagination?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<GridPane fx:id="root" prefWidth="1290.0" styleClass="content-container" stylesheets="@../../styles/views/home.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ndominkiewicz.frontend.controller.view.HomeController">
+   <columnConstraints>
+      <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" percentWidth="40.0" prefWidth="100.0" />
+      <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" percentWidth="35.0" prefWidth="100.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" prefWidth="100.0" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints fillHeight="false" minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+   </rowConstraints>
+   <children>
+      <FlowPane alignment="TOP_CENTER" prefHeight="550.0" prefWidth="1920.0" GridPane.columnIndex="1">
+         <children>
+            <Label lineSpacing="7.0" prefHeight="359.0" prefWidth="388.0" styleClass="content-paragraph" text="Nulla facilisi. Nullam ultrices, ex et eleifend egestas, nibh nulla facilisis ligula, quis aliquet quam quam eget nibh. Integer condimentum, diam vel pretium aliquet, turpis libero varius nisi, ut maximus orci erat sed quam. Donec ac finibus mi. Praesent pulvinar nulla quis ante tristique venenatis ut eget orci. In sed nisl laoreet, tempor erat vitae, hendrerit mi. Morbi quis dignissim diam. Vestibulum eu mauris sit amet eros blandit dapibus et quis quam. Duis bibendum rutrum ligula in fermentum." wrapText="true" />
+         </children>
+      </FlowPane>
+      <FlowPane alignment="CENTER_RIGHT" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2">
+         <children>
+            <GridPane prefHeight="500.0" prefWidth="300.0" styleClass="content-results-container">
+               <columnConstraints>
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" percentHeight="15.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" percentHeight="75.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" percentHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <Label styleClass="content-results-label" text="Ostatnie wyniki:" />
+                  <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1" />
+                  <Pagination prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2" />
+               </children>
+            </GridPane>
+         </children>
+      </FlowPane>
+      <ScrollPane hbarPolicy="NEVER" prefHeight="500.0" prefWidth="400.0" styleClass="content-updates-container">
+         <content>
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="709.0" prefWidth="385.0" styleClass="content-updates">
+               <children>
+                  <Label layoutX="31.0" layoutY="40.0" styleClass="content-updates-header" text="Aktualizacje:" />
+               </children>
+            </AnchorPane>
+         </content>
+      </ScrollPane>
+   </children>
+</GridPane>

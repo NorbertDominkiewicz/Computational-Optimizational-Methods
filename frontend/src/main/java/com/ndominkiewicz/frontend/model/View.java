@@ -1,8 +1,10 @@
 package com.ndominkiewicz.frontend.model;
 
-public enum Page {
+public enum View {
+    HOME,
     BIPARTITE,
-    FIBONACCI,
     BISECTION,
-    NEWTON
+    FIBONACCI,
+    NEWTON,
+    USER
 }

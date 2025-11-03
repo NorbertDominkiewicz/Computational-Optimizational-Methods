@@ -1,0 +1,77 @@
+.root {
+    -fx-background-color: transparent;
+    -fx-background-radius: 0px;
+    -fx-pref-width: 1290px;
+    -fx-pref-height: 560px;
+}
+
+.entry-container,
+.result-container {
+    -fx-background-color: #262525;
+    -fx-pref-height: 500px;
+    -fx-background-radius: 36px;
+    -fx-pref-width: 300px;
+}
+
+.result-header-container {
+    -fx-background-color: #171616;
+    -fx-background-radius: 36px 36px 0px 0px;
+}
+
+.entry-label,
+.result-header {
+    -fx-text-fill: #E6F4EF;
+    -fx-font-weight: 700;
+    -fx-font-family: Carlito;
+    -fx-font-size: 18px;
+}
+
+.result-label {
+    -fx-text-fill: #E6F4EF;
+    -fx-font-weight: 700;
+    -fx-font-family: Carlito;
+    -fx-font-size: 15px;
+}
+
+.entry-input {
+    -fx-background-color: #E6F4EF;
+    -fx-background-radius: 8px;
+    -fx-padding: 12px 16px;
+    -fx-text-fill: #000000;
+}
+
+.chart {
+    -fx-background-color: transparent;
+    -fx-pref-height: 400px;
+}
+.chart-plot-background {
+    -fx-background-color: rgba(21, 20, 20, 0.74);
+}
+
+.chart-vertical-grid-lines {
+    -fx-stroke: #ffffff;
+    -fx-stroke-width: 1;
+}
+
+.chart-horizontal-grid-lines {
+    -fx-stroke: #404040;
+    -fx-stroke-width: 1;
+}
+
+.reload-button {
+    -fx-background-color: #343232;
+    -fx-background-radius: 50px;
+    -fx-border-color: black;
+    -fx-border-radius: 50px;
+    -fx-border-width: 1px;
+    -fx-cursor: hand;
+}
+
+.reload-icon {
+    -fx-text-fill: white;
+    -fx-fill: white;
+}
+
+
+
+

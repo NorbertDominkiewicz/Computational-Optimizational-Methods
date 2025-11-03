@@ -111,7 +111,7 @@ public class BipartiteService {
 
     private BipartiteResult step5() {
         if (L <= e) {
-            return new BipartiteResult(a, b, L, xsr, x1, x2, e, iterations, functionPoints);
+            return new BipartiteResult("Maksimum", iterations, a, b, L, x1, x2, xsr);
         } else {
             iterations++;
             return step2();
