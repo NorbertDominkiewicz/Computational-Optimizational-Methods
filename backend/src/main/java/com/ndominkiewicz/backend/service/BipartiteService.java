@@ -34,7 +34,7 @@ public class BipartiteService {
             return expression.evaluate();
     };
         this.iterations = 1;
-        this.initializeFunctionPoints(100);
+        this.initializeFunctionPoints(500);
         this.step1();
         return step2();
     }
@@ -111,7 +111,7 @@ public class BipartiteService {
 
     private BipartiteResult step5() {
         if (L <= e) {
-            return new BipartiteResult("Maksimum", iterations, a, b, L, x1, x2, xsr, functionPoints);
+            return new BipartiteResult("Maksimum", iterations, a, b, L, x1, x2, xsr, function.apply(xsr),functionPoints);
         } else {
             iterations++;
             return step2();

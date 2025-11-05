@@ -44,7 +44,7 @@ public class BipartiteService {
     }
     public BipartiteResult calculate() {
         try{
-            String url = "http://localhost:8080/api/bipartite?a=-6&b=-1&e=0.1&equation=x%5E3-3*x%5E2-20*x+1";
+            String url = "http://localhost:8080/api/v1/bipartite?a=-6&b=-1&e=0.1&equation=x%5E3-3*x%5E2-20*x+1";
             HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).build();
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             return Parser.parse(response.body());

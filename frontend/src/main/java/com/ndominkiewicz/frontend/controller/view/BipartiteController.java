@@ -6,19 +6,23 @@ import com.ndominkiewicz.frontend.controller.component.EntryController;
 import com.ndominkiewicz.frontend.controller.component.ResultController;
 import com.ndominkiewicz.frontend.model.*;
 import com.ndominkiewicz.frontend.service.BipartiteService;
+import com.ndominkiewicz.frontend.utils.Point;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import org.checkerframework.checker.units.qual.C;
 
 import java.net.URL;
-import java.util.Map;
-import java.util.Objects;
-import java.util.ResourceBundle;
-import java.util.TreeMap;
+import java.util.*;
 
 
 /**
@@ -36,16 +40,45 @@ public class BipartiteController implements ViewController {
     /**
      * FXML Elements
      */
+    @FXML private BorderPane chartContainer;
     @FXML private FlowPane componentsContainer;
     @FXML private GridPane root;
+    /**
+     * Chart
+     */
+    private NumberAxis xAxis;
+    private NumberAxis yAxis;
+    private LineChart<Number, Number> chart;
+    private XYChart.Series<Number, Number> series = new XYChart.Series<>();
+    private List<XYChart.Data<Number, Number>> functionPoints = new ArrayList<>();
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        initActions();
         initComponents();
+        initChart();
         swapComponent(Component.ENTRY);
     }
-    private void initActions() {
-
+    private void initChart() {
+        xAxis = new NumberAxis();
+        yAxis = new NumberAxis();
+        chart = new LineChart<>(xAxis, yAxis);
+        chart.setAnimated(true);
+        xAxis.setLabel("x");
+        yAxis.setLabel("f(x)");
+        xAxis.setTickUnit(5);
+        xAxis.setAutoRanging(false);
+        yAxis.setAutoRanging(false);
+        chartContainer.setCenter(chart);
+    }
+    public void updateXBounds(double xMin, double xMax) {
+        Platform.runLater(() -> {
+            xAxis.setLowerBound(xMin * 2);
+            xAxis.setUpperBound(xMax < 0 ? Math.abs(xMax) : xMax * 2);
+        });
+    }
+    private void updateYBounds(double yMax) {
+        Platform.runLater(() -> {
+            yAxis.setUpperBound(yMax < 0 ? Math.abs(yMax) : yMax * 1.1115);
+        });
     }
     /**
      * Method that loads up all components for this controller
@@ -109,7 +142,6 @@ public class BipartiteController implements ViewController {
     public ViewController getController() {
         return this;
     }
-
     @Override
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
@@ -121,12 +153,36 @@ public class BipartiteController implements ViewController {
         BipartiteResult result;
         swapComponent(Component.RESULT);
         EntryController entryController = (EntryController) components.get(Component.ENTRY);
-        if(Objects.equals(entryController.getEquationField().getText(), "")){
+        if(entryController.getEquationField().getText().isEmpty()){
             result = bipartiteService.calculate();
         } else {
             result = bipartiteService.calculate(entryController.getData());
         }
+        initializeFunctionPoints(result.points(), result.xsr(), result.fx());
+        updateXBounds(-6, -1);
+        updateYBounds(result.fx());
         ResultController resultController = (ResultController) components.get(Component.RESULT);
         resultController.updateLabels(result.mode(), result.iterations(), result.a(), result.b(), result.L(), result.x1(), result.x2(), result.xsr());
+    }
+    private void initializeFunctionPoints(List<Point> points, double optimumX, double optimumY) {
+        functionPoints.clear();
+        series.getData().clear();
+        for (Point point : points) {
+            functionPoints.add(new XYChart.Data<>(point.getX(), point.getY()));
+        }
+        series.getData().addAll(functionPoints);
+        XYChart.Data<Number, Number> optimumPoint = new XYChart.Data<>(optimumX, optimumY);
+        optimumPoint.setNode(createCustomNode("red"));
+        series.getData().add(optimumPoint);
+        series.setName("Result f(x) = " + optimumY);
+        if (!chart.getData().contains(series)) {
+            chart.getData().add(series);
+        }
+    }
+    private Node createCustomNode(String color) {
+        javafx.scene.shape.Circle circle = new javafx.scene.shape.Circle(5);
+        circle.setFill(javafx.scene.paint.Color.valueOf(color));
+        circle.setStroke(javafx.scene.paint.Color.BLACK);
+        return circle;
     }
 }

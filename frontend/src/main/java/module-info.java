@@ -7,6 +7,7 @@ module com.ndominkiewicz.frontend {
     requires java.net.http;
     requires exp4j;
     requires org.checkerframework.checker.qual;
+    requires com.fasterxml.jackson.databind;
 
     opens com.ndominkiewicz.frontend to javafx.fxml;
     exports com.ndominkiewicz.frontend;
@@ -16,4 +17,6 @@ module com.ndominkiewicz.frontend {
     opens com.ndominkiewicz.frontend.controller to javafx.fxml;
     opens com.ndominkiewicz.frontend.controller.component to javafx.fxml;
     exports com.ndominkiewicz.frontend.controller.component;
+    opens com.ndominkiewicz.frontend.model to com.fasterxml.jackson.databind;
+    opens com.ndominkiewicz.frontend.utils to com.fasterxml.jackson.databind;
 }

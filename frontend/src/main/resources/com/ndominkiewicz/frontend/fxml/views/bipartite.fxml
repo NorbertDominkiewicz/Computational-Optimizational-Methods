@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.chart.CategoryAxis?>
-<?import javafx.scene.chart.LineChart?>
-<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.GridPane?>
@@ -18,13 +16,6 @@
    </rowConstraints>
    <children>
       <FlowPane fx:id="componentsContainer" alignment="CENTER_RIGHT" GridPane.columnIndex="1" />
-      <LineChart prefHeight="335.0" prefWidth="968.0">
-        <xAxis>
-          <CategoryAxis side="BOTTOM" />
-        </xAxis>
-        <yAxis>
-          <NumberAxis side="LEFT" />
-        </yAxis>
-      </LineChart>
+      <BorderPane fx:id="chartContainer" prefHeight="200.0" prefWidth="200.0" />
    </children>
 </GridPane>
