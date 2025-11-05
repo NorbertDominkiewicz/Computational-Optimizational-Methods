@@ -24,6 +24,7 @@ public class BisectionService {
         this.b = b;
         this.e = e;
         this.iterations = 1;
+        this.function = x -> Math.pow(x, 3) - 3 * Math.pow(x, 2) - 20 * x + 1;
         this.derFunction = x -> {
             Expression expression = new ExpressionBuilder(equation)
                     .variable("x").build().setVariable("x", x);
@@ -50,7 +51,7 @@ public class BisectionService {
     }
     BisectionResult step2() {
         if(derFunction.apply(xsr) == 0) {
-            return new BisectionResult(a, b, e, xsr, iterations, functionPoints);
+            return new BisectionResult(a, b, e, xsr, function.apply(xsr), iterations, functionPoints);
         } else {
             if (derFunction.apply(xsr) * derFunction.apply(a) < 0) {
                 b = xsr;
@@ -62,7 +63,7 @@ public class BisectionService {
     }
     BisectionResult step3() {
         if(Math.abs(derFunction.apply(xsr)) < e){
-            return new BisectionResult(a, b, e, xsr, iterations, functionPoints);
+            return new BisectionResult(a, b, e, xsr, function.apply(xsr), iterations, functionPoints);
         }
         iterations ++;
         return step1();

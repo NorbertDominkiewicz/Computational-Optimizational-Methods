@@ -1,7 +1,8 @@
 package com.ndominkiewicz.frontend.controller;
 
 import com.ndominkiewicz.frontend.Launcher;
-import com.ndominkiewicz.frontend.controller.view.MethodController;
+import com.ndominkiewicz.frontend.controller.view.BipartiteController;
+import com.ndominkiewicz.frontend.controller.view.BisectionController;
 import com.ndominkiewicz.frontend.controller.view.HomeController;
 import com.ndominkiewicz.frontend.model.View;
 import com.ndominkiewicz.frontend.model.ViewController;
@@ -39,6 +40,7 @@ public class MainController implements Initializable {
      */
     @FXML private Button homeButton;
     @FXML private Button bipartiteButton;
+    @FXML private Button bisectionButton;
     @FXML private Button closeButton;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -53,6 +55,8 @@ public class MainController implements Initializable {
         closeButton.setOnAction(actionEvent -> Launcher.close());
         homeButton.setOnAction(actionEvent -> changeView(View.HOME));
         bipartiteButton.setOnAction(actionEvent -> changeView(View.BIPARTITE));
+        bisectionButton.setOnAction( actionEvent -> changeView(View.BISECTION));
+
     }
     /**
      * Method that loads up all views possible to use at once
@@ -60,6 +64,7 @@ public class MainController implements Initializable {
     private void initViews() {
         initView(View.HOME);
         initView(View.BIPARTITE);
+        initView(View.BISECTION);
     }
 
     /**
@@ -76,12 +81,14 @@ public class MainController implements Initializable {
                 views.put(view, homeController);
             }
             case BIPARTITE -> {
-                MethodController methodController = (MethodController) controller;
-                methodController.setMainController(this);
-                views.put(view, methodController);
+                BipartiteController bipartiteController = (BipartiteController) controller;
+                bipartiteController.setMainController(this);
+                views.put(view, bipartiteController);
             }
-            case FIBONACCI -> {
-
+            case BISECTION -> {
+                BisectionController bisectionController = (BisectionController) controller;
+                bisectionController.setMainController(this);
+                views.put(view, bisectionController);
             }
         }
     }
@@ -128,14 +135,18 @@ public class MainController implements Initializable {
         switch (view) {
             case HOME -> Platform.runLater(() -> viewLabel.setText("Home"));
             case BIPARTITE -> Platform.runLater(() -> viewLabel.setText("Metoda Dwudzielna"));
+            case BISECTION -> Platform.runLater(() -> viewLabel.setText("Metoda Bisekcji"));
         }
     }
     private void changeActiveStyle(View view) {
+        System.out.println(view);
         homeButton.getStyleClass().remove("active");
         bipartiteButton.getStyleClass().remove("active");
+        bisectionButton.getStyleClass().remove("active");
         switch (view) {
             case HOME -> homeButton.getStyleClass().add("active");
             case BIPARTITE -> bipartiteButton.getStyleClass().add("active");
+            case BISECTION -> bisectionButton.getStyleClass().add("active");
         }
     }
     /**

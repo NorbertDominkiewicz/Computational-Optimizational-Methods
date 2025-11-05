@@ -2,9 +2,11 @@ package com.ndominkiewicz.frontend.model;
 
 public enum View {
     HOME,
+    FIBONACCI,
     BIPARTITE,
     BISECTION,
-    FIBONACCI,
+    SECANT,
     NEWTON,
+    GOLDENRATIO,
     USER
 }

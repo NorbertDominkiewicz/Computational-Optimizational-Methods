@@ -27,11 +27,10 @@ import java.util.*;
  * @author Norbert Dominkiewicz
  */
 
-public class MethodController implements ViewController {
+public class BipartiteController implements ViewController {
     private final BipartiteService bipartiteService = new BipartiteService();
     private final Map<Component, ComponentController> components = new TreeMap<>();
     private Component currentComponent;
-    private View view;
     /**
      * Controllers
      */
@@ -56,6 +55,18 @@ public class MethodController implements ViewController {
         initChart();
         swapComponent(Component.ENTRY);
     }
+    @Override
+    public Node getView() {
+        return root;
+    }
+    @Override
+    public ViewController getController() {
+        return this;
+    }
+    @Override
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
+    }
     private void initChart() {
         xAxis = new NumberAxis();
         yAxis = new NumberAxis();
@@ -67,9 +78,6 @@ public class MethodController implements ViewController {
         xAxis.setAutoRanging(false);
         yAxis.setAutoRanging(false);
         chartContainer.setCenter(chart);
-    }
-    public void setView(View view) {
-        this.view = view;
     }
     public void updateXBounds(double xMin, double xMax) {
         Platform.runLater(() -> {
@@ -135,18 +143,6 @@ public class MethodController implements ViewController {
                 }
             }
         }
-    }
-    @Override
-    public Node getView() {
-        return root;
-    }
-    @Override
-    public ViewController getController() {
-        return this;
-    }
-    @Override
-    public void setMainController(MainController mainController) {
-        this.mainController = mainController;
     }
     public MainController getMainController() {
         return mainController;

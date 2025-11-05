@@ -51,7 +51,7 @@
                         <FontAwesomeIcon fill="WHITE" glyphName="ROCKET" size="1.3em" styleClass="button-icon" />
                      </graphic>
                   </Button>
-                  <Button mnemonicParsing="false" styleClass="panel-button" text="Bisekcja" GridPane.rowIndex="4">
+                  <Button fx:id="bisectionButton" mnemonicParsing="false" styleClass="panel-button" text="Bisekcja" GridPane.rowIndex="4">
                      <graphic>
                         <FontAwesomeIcon fill="WHITE" glyphName="ROCKET" size="1.3em" styleClass="button-icon" />
                      </graphic>

@@ -5,6 +5,7 @@ import com.ndominkiewicz.frontend.model.BipartiteResult;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.ndominkiewicz.frontend.model.BisectionResult;
 import com.ndominkiewicz.frontend.model.NewtonResult;
 
 public class Parser {
@@ -12,6 +13,13 @@ public class Parser {
     public static BipartiteResult parseBipartite(String content) {
         try {
             return mapper.readValue(content, BipartiteResult.class);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to parse JSON", e);
+        }
+    }
+    public static BisectionResult parseBisection(String content) {
+        try {
+            return mapper.readValue(content, BisectionResult.class);
         } catch (Exception e) {
             throw new RuntimeException("Failed to parse JSON", e);
         }

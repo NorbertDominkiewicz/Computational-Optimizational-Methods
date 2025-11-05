@@ -1,6 +1,7 @@
 package com.ndominkiewicz.frontend.controller.component;
 
-import com.ndominkiewicz.frontend.controller.view.MethodController;
+import com.ndominkiewicz.frontend.controller.view.BipartiteController;
+import com.ndominkiewicz.frontend.controller.view.BisectionController;
 import com.ndominkiewicz.frontend.model.ComponentController;
 import com.ndominkiewicz.frontend.model.ViewController;
 import javafx.fxml.FXML;
@@ -46,8 +47,10 @@ public class EntryController implements ComponentController {
     }
     public void initActions() {
         runButton.setOnAction(actionEvent -> {
-            if(viewController instanceof MethodController bipartiteController) {
+            if(viewController instanceof BipartiteController bipartiteController) {
                 bipartiteController.onCalculate();
+            } else if(viewController instanceof BisectionController bisectionController) {
+                bisectionController.onCalculate();
             }
         });
     }
