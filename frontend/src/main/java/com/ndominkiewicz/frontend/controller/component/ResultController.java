@@ -1,6 +1,6 @@
 package com.ndominkiewicz.frontend.controller.component;
 
-import com.ndominkiewicz.frontend.controller.view.BipartiteController;
+import com.ndominkiewicz.frontend.controller.view.MethodController;
 import com.ndominkiewicz.frontend.model.Component;
 import com.ndominkiewicz.frontend.model.ComponentController;
 import com.ndominkiewicz.frontend.model.ViewController;
@@ -63,8 +63,8 @@ public class ResultController implements ComponentController {
     }
     private void initActions() {
         returnButton.setOnAction(actionEvent -> {
-            if(viewController instanceof BipartiteController bipartiteController) {
-                bipartiteController.swapComponent(Component.ENTRY);
+            if(viewController instanceof MethodController methodController) {
+                methodController.swapComponent(Component.ENTRY);
             }
         });
     }

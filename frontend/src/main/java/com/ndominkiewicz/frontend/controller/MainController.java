@@ -1,7 +1,7 @@
 package com.ndominkiewicz.frontend.controller;
 
 import com.ndominkiewicz.frontend.Launcher;
-import com.ndominkiewicz.frontend.controller.view.BipartiteController;
+import com.ndominkiewicz.frontend.controller.view.MethodController;
 import com.ndominkiewicz.frontend.controller.view.HomeController;
 import com.ndominkiewicz.frontend.model.View;
 import com.ndominkiewicz.frontend.model.ViewController;
@@ -72,11 +72,16 @@ public class MainController implements Initializable {
         switch (view) {
             case HOME -> {
                 HomeController homeController = (HomeController) controller;
+                homeController.setMainController(this);
                 views.put(view, homeController);
             }
             case BIPARTITE -> {
-                BipartiteController bipartiteController = (BipartiteController) controller;
-                views.put(view, bipartiteController);
+                MethodController methodController = (MethodController) controller;
+                methodController.setMainController(this);
+                views.put(view, methodController);
+            }
+            case FIBONACCI -> {
+
             }
         }
     }
@@ -132,5 +137,14 @@ public class MainController implements Initializable {
             case HOME -> homeButton.getStyleClass().add("active");
             case BIPARTITE -> bipartiteButton.getStyleClass().add("active");
         }
+    }
+    /**
+     * Method for adding results calculated in each of optimization method
+     * It provies the type from the controller and just result
+     *
+     */
+    public void addRecentResult(String method, double result) {
+        HomeController homeController = (HomeController) views.get(View.HOME);
+        homeController.addRecentResult(method, result);
     }
 }

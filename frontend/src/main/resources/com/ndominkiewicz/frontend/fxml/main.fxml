@@ -36,6 +36,7 @@
                   <RowConstraints minHeight="10.0" percentHeight="5.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" percentHeight="5.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" percentHeight="5.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" percentHeight="5.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" percentHeight="35.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" percentHeight="5.0" prefHeight="30.0" vgrow="SOMETIMES" />
                </rowConstraints>
@@ -70,9 +71,14 @@
                         <FontAwesomeIcon glyphName="HOME" size="1.3em" styleClass="button-icon" />
                      </graphic>
                   </Button>
-                  <Button mnemonicParsing="false" styleClass="panel-button" text="Konto" GridPane.rowIndex="8">
+                  <Button mnemonicParsing="false" styleClass="panel-button" text="Konto" GridPane.rowIndex="9">
                      <graphic>
                         <FontAwesomeIcon glyphName="USER" size="1.3em" styleClass="button-icon" />
+                     </graphic>
+                  </Button>
+                  <Button mnemonicParsing="false" styleClass="panel-button" text="Złoty Podział" GridPane.rowIndex="7">
+                     <graphic>
+                        <FontAwesomeIcon glyphName="ROCKET" size="1.3em" styleClass="button-icon" />
                      </graphic>
                   </Button>
                </children>

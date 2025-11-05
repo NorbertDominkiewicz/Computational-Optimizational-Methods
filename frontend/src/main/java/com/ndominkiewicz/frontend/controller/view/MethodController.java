@@ -15,11 +15,9 @@ import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
-import org.checkerframework.checker.units.qual.C;
 
 import java.net.URL;
 import java.util.*;
@@ -29,10 +27,11 @@ import java.util.*;
  * @author Norbert Dominkiewicz
  */
 
-public class BipartiteController implements ViewController {
+public class MethodController implements ViewController {
     private final BipartiteService bipartiteService = new BipartiteService();
     private final Map<Component, ComponentController> components = new TreeMap<>();
     private Component currentComponent;
+    private View view;
     /**
      * Controllers
      */
@@ -68,6 +67,9 @@ public class BipartiteController implements ViewController {
         xAxis.setAutoRanging(false);
         yAxis.setAutoRanging(false);
         chartContainer.setCenter(chart);
+    }
+    public void setView(View view) {
+        this.view = view;
     }
     public void updateXBounds(double xMin, double xMax) {
         Platform.runLater(() -> {
@@ -163,6 +165,7 @@ public class BipartiteController implements ViewController {
         updateYBounds(result.fx());
         ResultController resultController = (ResultController) components.get(Component.RESULT);
         resultController.updateLabels(result.mode(), result.iterations(), result.a(), result.b(), result.L(), result.x1(), result.x2(), result.xsr());
+        mainController.addRecentResult("Metoda Dwudzielna: ", result.fx());
     }
     private void initializeFunctionPoints(List<Point> points, double optimumX, double optimumY) {
         functionPoints.clear();
