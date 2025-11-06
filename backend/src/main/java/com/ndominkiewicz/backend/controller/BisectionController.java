@@ -23,4 +23,8 @@ public class BisectionController {
     ) {
         return bisectionService.solve(a, b, e, equation);
     }
+    @GetMapping("/bisectionExample")
+    public BisectionResult solve() {
+        return bisectionService.solve();
+    }
 }

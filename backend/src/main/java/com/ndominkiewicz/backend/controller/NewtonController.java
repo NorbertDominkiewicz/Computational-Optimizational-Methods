@@ -27,4 +27,8 @@ public class NewtonController {
     ) {
         return newtonService.solve(a, b, e, firstDerivative, secondDerivative, thirdDerivative);
     }
+    @GetMapping("/newtonExample")
+    public NewtonResult solve() {
+        return newtonService.solve();
+    }
 }

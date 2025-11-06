@@ -39,7 +39,7 @@ public class BisectionService {
         e = 0.001;
         function = x -> Math.pow(x, 3) - 3 * Math.pow(x, 2) - 20 * x + 1;
         derFunction = x -> 3 * Math.pow(x, 2) - 6 * x - 20;
-        initializeFunctionPoints(200);
+        initializeFunctionPoints(500);
         return canDo() ? step1() : null;
     }
     private boolean canDo() {

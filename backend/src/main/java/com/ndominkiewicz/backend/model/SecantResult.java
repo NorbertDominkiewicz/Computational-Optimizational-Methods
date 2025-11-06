@@ -1,4 +1,8 @@
 package com.ndominkiewicz.backend.model;
 
-public record SecantResult(double a, double b, double e, double xsr, double iterations) implements Result{
+import com.ndominkiewicz.backend.utils.Point;
+
+import java.util.List;
+
+public record SecantResult(double e, double result, double fx, double iterations, List<Point> points) implements Result{
 }

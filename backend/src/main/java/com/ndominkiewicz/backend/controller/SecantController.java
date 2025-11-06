@@ -27,4 +27,8 @@ public class SecantController {
     ) {
         return secantService.solve(a, b, e, firstDerivative, thirdDerivative);
     }
+    @GetMapping("/secantExample")
+    public SecantResult solve() {
+        return secantService.solve();
+    }
 }
