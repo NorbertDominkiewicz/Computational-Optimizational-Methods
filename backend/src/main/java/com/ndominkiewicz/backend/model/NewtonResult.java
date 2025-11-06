@@ -1,5 +1,9 @@
 package com.ndominkiewicz.backend.model;
 
+import com.ndominkiewicz.backend.utils.Point;
+
+import java.util.List;
+
 /**
  * @param a
  * @param b
@@ -7,4 +11,4 @@ package com.ndominkiewicz.backend.model;
  * @param xsr
  * @param iterations
  */
-public record NewtonResult(double a, double b, double e, double xsr, double iterations) implements Result{}
+public record NewtonResult(double e, double result, double fx, double iterations, List<Point> points) implements Result{}
