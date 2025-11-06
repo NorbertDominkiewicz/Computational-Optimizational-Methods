@@ -139,6 +139,7 @@ public class BisectionController implements ViewController, MethodController {
     public void clearPoints() {
         functionPoints.clear();
         series.getData().clear();
+        firstDerSeries.getData().clear();
     }
     @Override
     public void updateXBounds(Double xMin, Double xMax) {

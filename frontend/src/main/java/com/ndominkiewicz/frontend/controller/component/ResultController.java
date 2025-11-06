@@ -1,7 +1,6 @@
 package com.ndominkiewicz.frontend.controller.component;
 
-import com.ndominkiewicz.frontend.controller.view.BipartiteController;
-import com.ndominkiewicz.frontend.controller.view.NewtonController;
+import com.ndominkiewicz.frontend.controller.view.*;
 import com.ndominkiewicz.frontend.model.*;
 import com.ndominkiewicz.frontend.result.*;
 import javafx.fxml.FXML;
@@ -37,9 +36,23 @@ public class ResultController implements ComponentController {
             clearResults();
             if(viewController instanceof BipartiteController bipartiteController) {
                 bipartiteController.swapComponent(Component.ENTRY);
+                bipartiteController.clearPoints();
             }
             if(viewController instanceof NewtonController newtonController) {
                 newtonController.swapComponent(Component.ENTRY);
+                newtonController.clearPoints();
+            }
+            if(viewController instanceof BisectionController bisectionController) {
+                bisectionController.swapComponent(Component.ENTRY);
+                bisectionController.clearPoints();
+            }
+            if(viewController instanceof SecantController secantController) {
+                secantController.swapComponent(Component.ENTRY);
+                secantController.clearPoints();
+            }
+            if(viewController instanceof GoldenRatioController goldenRatioController) {
+                goldenRatioController.swapComponent(Component.ENTRY);
+                goldenRatioController.clearPoints();
             }
         });
     }

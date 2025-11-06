@@ -19,7 +19,9 @@ public class SecantService {
     private Function<Double, Double> function;
     private Function<Double, Double> firstDerivative;
     private Function<Double, Double> thirdDerivative;
-    private List<Point> points = new ArrayList<>();
+    private final List<Point> points = new ArrayList<>();
+    private final List<Point> firstDerPoints = new ArrayList<>();
+    private final List<Point> thirdDerPoints = new ArrayList<>();
     public SecantResult solve() {
         clearData();
         a = -6;
@@ -46,6 +48,16 @@ public class SecantService {
             double x = a + (range * i / points);
             double y = function.apply(x);
             this.points.add(new Point(x, y));
+        }
+        for(int i = 0; i <= points; i++) {
+            double x = a + (range * i / points);
+            double y = firstDerivative.apply(x);
+            this.firstDerPoints.add(new Point(x, y));
+        }
+        for(int i = 0; i <= points; i++) {
+            double x = a + (range * i / points);
+            double y = thirdDerivative.apply(x);
+            this.thirdDerPoints.add(new Point(x, y));
         }
     }
     private void clearData() {
@@ -74,7 +86,7 @@ public class SecantService {
             case B -> xn1 = xn - (firstDerivative.apply(xn) / (firstDerivative.apply(xn) - firstDerivative.apply(b))) * (b - xn);
         }
         if(Math.abs(firstDerivative.apply(xn1)) < e || Math.abs(xn1 - xn) < e) {
-            return new SecantResult(e, xn1, function.apply(xn1), iterations, points);
+            return new SecantResult(e, xn1, function.apply(xn1), iterations, points, firstDerPoints, thirdDerPoints);
         }
         xn = xn1;
         iterations++;

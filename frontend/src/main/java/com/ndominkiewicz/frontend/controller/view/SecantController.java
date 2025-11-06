@@ -36,6 +36,8 @@ public class SecantController implements ViewController, MethodController {
     private final NumberAxis yAxis = new NumberAxis();
     private final LineChart<Number, Number> chart = new LineChart<>(xAxis, yAxis);
     private final XYChart.Series<Number, Number> series = new XYChart.Series<>();
+    private final XYChart.Series<Number, Number> firstDerSeries = new XYChart.Series<>();
+    private final XYChart.Series<Number, Number> thirdDerSeries = new XYChart.Series<>();
     private final List<XYChart.Data<Number, Number>> functionPoints = new ArrayList<>();
     private MainController mainController;
     private Component currentComponent;
@@ -115,6 +117,22 @@ public class SecantController implements ViewController, MethodController {
         yAxis.setAutoRanging(false);
         if(chartContainer.getChildren().isEmpty()) {
             chartContainer.setCenter(chart);
+        }
+    }
+    public void loadPoints(List<Point> points, List<Point> firstDerPoints, List<Point> thirdDerPoints,double optimumX, double optimumY) {
+        clearPoints();
+        for(Point point : points) functionPoints.add(new XYChart.Data<>(point.getX(), point.getY()));
+        for(Point point : firstDerPoints) firstDerSeries.getData().add(new XYChart.Data<>(point.getX(), point.getY()));
+        for(Point point : thirdDerPoints) thirdDerSeries.getData().add(new XYChart.Data<>(point.getX(), point.getY()));
+        XYChart.Data<Number, Number> optimumPoint = new XYChart.Data<>(optimumX, optimumY);
+        optimumPoint.setNode(CustomNode.createCircle("green"));
+        series.getData().addAll(functionPoints);
+        series.getData().add(optimumPoint);
+        series.setName("f(x) = " + optimumY);
+        firstDerSeries.setName("f'(x)");
+        thirdDerSeries.setName("f'''(x)");
+        if (!(chart.getData().contains(series))) {
+            chart.getData().addAll(series, firstDerSeries, thirdDerSeries);
         }
     }
     @Override
