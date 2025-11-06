@@ -38,6 +38,7 @@ public class BisectionController implements ViewController, MethodController {
     private final NumberAxis yAxis = new NumberAxis();
     private final LineChart<Number, Number> chart = new LineChart<>(xAxis, yAxis);
     private final XYChart.Series<Number, Number> series = new XYChart.Series<>();
+    private final XYChart.Series<Number, Number> firstDerSeries = new XYChart.Series<>();
     private final List<XYChart.Data<Number, Number>> functionPoints = new ArrayList<>();
     private MainController mainController;
     private Component currentComponent;
@@ -119,17 +120,18 @@ public class BisectionController implements ViewController, MethodController {
             chartContainer.setCenter(chart);
         }
     }
-    @Override
-    public void loadPoints(List<Point> points, double optimumX, double optimumY) {
+    public void loadPoints(List<Point> points, List<Point> firstDerPoints, double optimumX, double optimumY) {
         clearPoints();
         for(Point point : points) functionPoints.add(new XYChart.Data<>(point.getX(), point.getY()));
+        for(Point point : firstDerPoints) firstDerSeries.getData().add(new XYChart.Data<>(point.getX(), point.getY()));
         XYChart.Data<Number, Number> optimumPoint = new XYChart.Data<>(optimumX, optimumY);
         optimumPoint.setNode(CustomNode.createCircle("green"));
         series.getData().addAll(functionPoints);
         series.getData().add(optimumPoint);
         series.setName("f(x) = " + optimumY);
+        firstDerSeries.setName("f'(x)");
         if (!(chart.getData().contains(series))) {
-            chart.getData().add(series);
+            chart.getData().addAll(series, firstDerSeries);
         }
     }
 
@@ -169,7 +171,7 @@ public class BisectionController implements ViewController, MethodController {
                 bisectionResult = bisectionService.calculate();
                 updateXBounds((double) -6, (double) -1);
                 updateYBounds((double) - 220, (double) 30);
-                loadPoints(bisectionResult.functionPoints(), bisectionResult.xsr(),bisectionResult.fx());
+                loadPoints(bisectionResult.functionPoints(), bisectionResult.derFunctionPoints(), bisectionResult.xsr(),bisectionResult.fx());
             }
             else {
                 if (e.isEmpty()) {
@@ -194,6 +196,11 @@ public class BisectionController implements ViewController, MethodController {
         } catch (RuntimeException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void loadPoints(List<Point> points, double optimumX, double optimumY) {
+
     }
 
     @Override

@@ -129,6 +129,9 @@ public class NewtonController implements ViewController, MethodController {
         series.getData().addAll(functionPoints);
         series.getData().add(optimumPoint);
         series.setName("f(x) = " + optimumY);
+        firstDerSeries.setName("f'(x)");
+        secondDerSeries.setName("f''(x)");
+        thirdDerSeries.setName("f'''(x)");
         if (!(chart.getData().contains(series))) {
             chart.getData().addAll(series, firstDerSeries, secondDerSeries, thirdDerSeries);
         }

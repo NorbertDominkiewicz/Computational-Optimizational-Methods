@@ -12,12 +12,13 @@ import java.util.function.Function;
 
 @Service
 public class BisectionService {
-    double a, b, e;
-    double xsr;
-    int iterations;
-    Function<Double, Double> function;
-    Function<Double, Double> derFunction;
-    List<Point> functionPoints = new ArrayList<>();
+    private double a, b, e;
+    private double xsr;
+    private int iterations;
+    private Function<Double, Double> function;
+    private Function<Double, Double> derFunction;
+    private final List<Point> functionPoints = new ArrayList<>();
+    private final List<Point> derFunctionPoints = new ArrayList<>();
     public BisectionResult solve(double a, double b, double e, String equation){
         this.a = a;
         this.b = b;
@@ -59,7 +60,7 @@ public class BisectionService {
     }
     BisectionResult step2() {
         if(derFunction.apply(xsr) == 0) {
-            return new BisectionResult(e, xsr, function.apply(xsr), iterations, functionPoints);
+            return new BisectionResult(e, xsr, function.apply(xsr), iterations, functionPoints, derFunctionPoints);
         } else {
             if (derFunction.apply(xsr) * derFunction.apply(a) < 0) {
                 b = xsr;
@@ -71,25 +72,22 @@ public class BisectionService {
     }
     BisectionResult step3() {
         if(Math.abs(derFunction.apply(xsr)) < e){
-            return new BisectionResult(e, xsr, function.apply(xsr), iterations, functionPoints);
+            return new BisectionResult(e, xsr, function.apply(xsr), iterations, functionPoints, derFunctionPoints);
         }
         iterations ++;
         return step1();
     }
     public void initializeFunctionPoints(int points) {
         double range = b - a;
-        if(function == null) {
-            for(int i = 0; i <= points; i++) {
-                double x = a + (range * i / points);
-                double y = derFunction.apply(x);
-                functionPoints.add(new Point(x, y));
-            }
-        } else {
-            for(int i = 0; i <= points; i++) {
-                double x = a + (range * i / points);
-                double y = function.apply(x);
-                functionPoints.add(new Point(x, y));
-            }
+        for(int i = 0; i <= points; i++) {
+            double x = a + (range * i / points);
+            double y = function.apply(x);
+            functionPoints.add(new Point(x, y));
+        }
+        for(int i = 0; i <= points; i++) {
+            double x = a + (range * i / points);
+            double y = derFunction.apply(x);
+            derFunctionPoints.add(new Point(x, y));
         }
     }
 }
