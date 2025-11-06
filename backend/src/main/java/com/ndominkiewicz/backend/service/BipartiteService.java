@@ -1,5 +1,5 @@
 package com.ndominkiewicz.backend.service;
-import com.ndominkiewicz.backend.model.BipartiteResult;
+import com.ndominkiewicz.backend.result.BipartiteResult;
 import com.ndominkiewicz.backend.model.MINMAX;
 import com.ndominkiewicz.backend.utils.Point;
 import org.springframework.stereotype.Service;
@@ -21,13 +21,13 @@ public class BipartiteService {
     public MINMAX mode;
     public double [] points;
     public Function<Double, Double> function;
-    public List<Point> functionPoints;
+    public List<Point> functionPoints = new ArrayList<>();
     public BipartiteResult solve(double a, double b, double e, String equation) {
+        clearData();
         this.a = a;
         this.b = b;
         this.e = e;
         this.mode = MINMAX.MAXIMUM;
-        this.functionPoints = new ArrayList<>();
         this.function = x -> {
             Expression expression = new ExpressionBuilder(equation)
                     .variable("x").build().setVariable("x", x);
@@ -37,6 +37,28 @@ public class BipartiteService {
         this.initializeFunctionPoints(500);
         this.step1();
         return step2();
+    }
+    public BipartiteResult solve() {
+        clearData();
+        a = -6;
+        b = -1;
+        e = 0.001;
+        mode = MINMAX.MAXIMUM;
+        function = x -> Math.pow(x, 3) - 3 * Math.pow(x, 2) - 20 * x + 1;
+        iterations = 1;
+        initializeFunctionPoints(500);
+        step1();
+        return step2();
+    }
+    private void clearData() {
+        a = 0;
+        b = 0;
+        e = 0;
+        L = 0;
+        x1 = 0;
+        x2 = 0;
+        iterations = 0;
+        functionPoints.clear();
     }
     public void initializeFunctionPoints(int points) {
         double range = b - a;
@@ -111,7 +133,7 @@ public class BipartiteService {
 
     private BipartiteResult step5() {
         if (L <= e) {
-            return new BipartiteResult("Maksimum", iterations, a, b, L, x1, x2, xsr, function.apply(xsr),functionPoints);
+            return new BipartiteResult("Maksimum", iterations, e, xsr, function.apply(xsr),functionPoints);
         } else {
             iterations++;
             return step2();

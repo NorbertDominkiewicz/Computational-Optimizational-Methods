@@ -1,8 +1,7 @@
 package com.ndominkiewicz.backend.service;
 
-import com.ndominkiewicz.backend.model.BisectionResult;
+import com.ndominkiewicz.backend.result.BisectionResult;
 import com.ndominkiewicz.backend.utils.Point;
-import com.ndominkiewicz.backend.utils.Derivative;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import org.springframework.stereotype.Service;
@@ -34,6 +33,7 @@ public class BisectionService {
         return canDo() ? step1() : null;
     }
     public BisectionResult solve(){
+        clearData();
         a = -6;
         b = -1;
         e = 0.001;
@@ -41,6 +41,14 @@ public class BisectionService {
         derFunction = x -> 3 * Math.pow(x, 2) - 6 * x - 20;
         initializeFunctionPoints(500);
         return canDo() ? step1() : null;
+    }
+    private void clearData() {
+        a = 0;
+        b = 0;
+        e = 0;
+        xsr = 0;
+        iterations = 0;
+        functionPoints.clear();
     }
     private boolean canDo() {
         return derFunction.apply(a) * derFunction.apply(b) < 0;
@@ -51,7 +59,7 @@ public class BisectionService {
     }
     BisectionResult step2() {
         if(derFunction.apply(xsr) == 0) {
-            return new BisectionResult(a, b, e, xsr, function.apply(xsr), iterations, functionPoints);
+            return new BisectionResult(e, xsr, function.apply(xsr), iterations, functionPoints);
         } else {
             if (derFunction.apply(xsr) * derFunction.apply(a) < 0) {
                 b = xsr;
@@ -63,7 +71,7 @@ public class BisectionService {
     }
     BisectionResult step3() {
         if(Math.abs(derFunction.apply(xsr)) < e){
-            return new BisectionResult(a, b, e, xsr, function.apply(xsr), iterations, functionPoints);
+            return new BisectionResult(e, xsr, function.apply(xsr), iterations, functionPoints);
         }
         iterations ++;
         return step1();

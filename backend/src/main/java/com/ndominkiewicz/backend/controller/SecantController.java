@@ -1,7 +1,6 @@
 package com.ndominkiewicz.backend.controller;
 
-import com.ndominkiewicz.backend.model.NewtonResult;
-import com.ndominkiewicz.backend.model.SecantResult;
+import com.ndominkiewicz.backend.result.SecantResult;
 import com.ndominkiewicz.backend.service.SecantService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

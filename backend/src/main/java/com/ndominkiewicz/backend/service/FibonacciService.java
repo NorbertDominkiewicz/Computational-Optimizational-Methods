@@ -1,6 +1,6 @@
 package com.ndominkiewicz.backend.service;
 
-import com.ndominkiewicz.backend.model.FibonacciResult;
+import com.ndominkiewicz.backend.result.FibonacciResult;
 import com.ndominkiewicz.backend.model.MINMAX;
 import com.ndominkiewicz.backend.utils.Point;
 import net.objecthunter.exp4j.Expression;
@@ -19,7 +19,7 @@ public class FibonacciService {
     private double x1, x2;
     private MINMAX mode;
     private Function<Double, Double> function;
-    private List<Point> points;
+    private final List<Point> points = new ArrayList<>();
     public FibonacciResult solve(double a, double b, double e, String equation) {
         this.a = a;
         this.b = b;
@@ -33,12 +33,34 @@ public class FibonacciService {
                     .setVariable("x", x);
             return expression.evaluate();
         };
-        this.points = new ArrayList<>();
         this.initializeFunctionPoints(100);
         n = getN(1, 1, 1);
         x1 = getX1();
         x2 = getX2();
         return step3();
+    }
+    public FibonacciResult solve() {
+        clearData();
+        a = -6;
+        b = -1;
+        e = 0.001;
+        function = x -> Math.pow(x, 3) - 3 * Math.pow(x, 2) - 20 * x + 1;
+        mode = MINMAX.MAXIMUM;
+        initializeFunctionPoints(500);
+        n = getN(1, 1, 1);
+        x1 = getX1();
+        x2 = getX2();
+        return step3();
+    }
+    private void clearData() {
+        a = 0;
+        b = 0;
+        e = 0;
+        n = 0;
+        x1 = 0;
+        x2 = 0;
+        iterations = 0;
+        points.clear();
     }
     public void initializeFunctionPoints(int points) {
         double range = b - a;
@@ -107,7 +129,7 @@ public class FibonacciService {
     private FibonacciResult step4() {
         if ((Math.abs(x2 - x1) < e) || n == 1) {
             double result = (a + b) / 2;
-            return new FibonacciResult("Maksimum", iterations, a, b, e, x1, x2, result, points);
+            return new FibonacciResult("Maksimum", e, result, function.apply(result), iterations, points);
         }
         iterations++;
         return step3();

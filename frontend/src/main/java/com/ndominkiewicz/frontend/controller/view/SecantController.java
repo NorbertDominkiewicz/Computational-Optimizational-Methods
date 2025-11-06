@@ -6,10 +6,8 @@ import com.ndominkiewicz.frontend.controller.component.EntryController;
 import com.ndominkiewicz.frontend.controller.component.ResultController;
 import com.ndominkiewicz.frontend.exception.ServerNotConnected;
 import com.ndominkiewicz.frontend.model.*;
-import com.ndominkiewicz.frontend.result.BisectionResult;
 import com.ndominkiewicz.frontend.result.NewtonResult;
 import com.ndominkiewicz.frontend.result.SecantResult;
-import com.ndominkiewicz.frontend.service.BisectionService;
 import com.ndominkiewicz.frontend.service.NewtonService;
 import com.ndominkiewicz.frontend.service.SecantService;
 import com.ndominkiewicz.frontend.utils.CustomNode;
@@ -28,11 +26,11 @@ import javafx.scene.layout.GridPane;
 import java.net.URL;
 import java.util.*;
 
-public class BisectionController implements ViewController, MethodController {
+public class SecantController implements ViewController, MethodController {
     @FXML private GridPane root;
     @FXML private FlowPane componentsContainer;
     @FXML private BorderPane chartContainer;
-    private final BisectionService bisectionService = new BisectionService();
+    private final SecantService secantService = new SecantService();
     private final Map<Component, ComponentController> components = new TreeMap<>();
     private final NumberAxis xAxis = new NumberAxis();
     private final NumberAxis yAxis = new NumberAxis();
@@ -141,8 +139,8 @@ public class BisectionController implements ViewController, MethodController {
     @Override
     public void updateXBounds(Double xMin, Double xMax) {
         Platform.runLater(() -> {
-            if (xMin != null) xAxis.setLowerBound(xMin * 1.2);
-            if (xMax != null) xAxis.setUpperBound(xMax < 0 ? Math.abs(xMax) : xMax * 1.2);
+            if (xMin != null) xAxis.setLowerBound(xMin * 2);
+            if (xMax != null) xAxis.setUpperBound(xMax < 0 ? Math.abs(xMax) : xMax * 2);
         });
     }
 
@@ -155,7 +153,7 @@ public class BisectionController implements ViewController, MethodController {
     }
     @Override
     public void onCalculate() {
-        BisectionResult bisectionResult = null;
+        SecantResult secantResult = null;
         EntryController entryController;
         try {
             entryController = (EntryController) components.get(Component.ENTRY);
@@ -166,29 +164,29 @@ public class BisectionController implements ViewController, MethodController {
             String equation = data[0];
             if (e.isEmpty() && a.isEmpty() && b.isEmpty() && equation.isEmpty()) {
                 // sample already with arguments
-                bisectionResult = bisectionService.calculate();
+                secantResult = secantService.calculate();
                 updateXBounds((double) -6, (double) -1);
                 updateYBounds((double) - 220, (double) 30);
-                loadPoints(bisectionResult.functionPoints(), bisectionResult.xsr(),bisectionResult.fx());
+                loadPoints(secantResult.points(), secantResult.result(),secantResult.fx());
             }
             else {
                 if (e.isEmpty()) {
-                    bisectionResult = bisectionService.calculate(Double.parseDouble(a), Double.parseDouble(b), equation);
+                    secantResult = secantService.calculate(Double.parseDouble(a), Double.parseDouble(b), equation);
                 }
                 if (e.isEmpty() && a.isEmpty() && b.isEmpty()) {
-                    bisectionResult = bisectionService.calculate(equation);
+                    secantResult = secantService.calculate(equation);
                 }
                 if (!(e.isEmpty() && a.isEmpty() && b.isEmpty() && equation.isEmpty())) {
-                    bisectionResult = bisectionService.calculate(Double.parseDouble(a), Double.parseDouble(b), Double.parseDouble(e), equation);
+                    secantResult = secantService.calculate(Double.parseDouble(a), Double.parseDouble(b), Double.parseDouble(e), equation);
                 }
                 updateXBounds(Double.parseDouble(a), Double.parseDouble(b));
-                updateYBounds(null, bisectionResult.fx());
+                updateYBounds(null, secantResult.fx());
             }
             swapComponent(Component.RESULT);
             ResultController resultController = (ResultController) components.get(Component.RESULT);
-            resultController.addResults(bisectionResult);
-            mainController.addRecentResult("Metoda siecznych: ", bisectionResult.fx());
-            if (bisectionResult == null) {
+            resultController.addResults(secantResult);
+            mainController.addRecentResult("Metoda siecznych: ", secantResult.fx());
+            if (secantResult == null) {
                 throw new ServerNotConnected("Could not connect the API");
             }
         } catch (RuntimeException e) {
@@ -217,3 +215,4 @@ public class BisectionController implements ViewController, MethodController {
     }
 
 }
+

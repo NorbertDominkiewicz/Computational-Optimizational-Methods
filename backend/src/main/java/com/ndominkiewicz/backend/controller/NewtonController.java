@@ -1,6 +1,6 @@
 package com.ndominkiewicz.backend.controller;
 
-import com.ndominkiewicz.backend.model.NewtonResult;
+import com.ndominkiewicz.backend.result.NewtonResult;
 import com.ndominkiewicz.backend.service.NewtonService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

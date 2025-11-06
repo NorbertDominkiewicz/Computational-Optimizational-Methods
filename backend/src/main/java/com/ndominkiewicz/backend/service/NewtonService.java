@@ -1,6 +1,6 @@
 package com.ndominkiewicz.backend.service;
 
-import com.ndominkiewicz.backend.model.NewtonResult;
+import com.ndominkiewicz.backend.result.NewtonResult;
 import com.ndominkiewicz.backend.utils.Point;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
@@ -20,6 +20,9 @@ public class NewtonService {
     private Function<Double, Double> secondDerivative;
     private Function<Double, Double> thirdDerivative;
     private List<Point> points = new ArrayList<>();
+    private List<Point> firstDerivativePoints = new ArrayList<>();
+    private List<Point> secondDerivativePoints = new ArrayList<>();
+    private List<Point> thirdDerivativePoints = new ArrayList<>();
     public NewtonResult solve(double a, double b, double e, String firstDerivative, String secondDerivative, String thirdDerivative) {
         this.clearData();
         this.a = a;
@@ -50,6 +53,9 @@ public class NewtonService {
         xn1 = 0;
         iterations = 0;
         points.clear();
+        firstDerivativePoints.clear();
+        secondDerivativePoints.clear();
+        thirdDerivativePoints.clear();
     }
     public void initializeFunctionPoints(int points) {
         double range = b - a;
@@ -57,6 +63,21 @@ public class NewtonService {
             double x = a + (range * i / points);
             double y = function.apply(x);
             this.points.add(new Point(x, y));
+        }
+        for(int i = 0; i <= points; i++) {
+            double x = a + (range * i / points);
+            double y = firstDerivative.apply(x);
+            this.firstDerivativePoints.add(new Point(x, y));
+        }
+        for(int i = 0; i <= points; i++) {
+            double x = a + (range * i / points);
+            double y = secondDerivative.apply(x);
+            this.secondDerivativePoints.add(new Point(x, y));
+        }
+        for(int i = 0; i <= points; i++) {
+            double x = a + (range * i / points);
+            double y = thirdDerivative.apply(x);
+            this.thirdDerivativePoints.add(new Point(x, y));
         }
     }
     private NewtonResult getXn() {
@@ -70,7 +91,7 @@ public class NewtonService {
     private NewtonResult getXn1() {
         xn1 = xn - (firstDerivative.apply(xn) / secondDerivative.apply(xn));
         if(Math.abs(firstDerivative.apply(xn1)) < e || Math.abs(xn1 - xn) < e) {
-            return new NewtonResult(e, xn1, function.apply(xn1), iterations, points);
+            return new NewtonResult(e, xn1, function.apply(xn1), iterations, points, firstDerivativePoints, secondDerivativePoints, thirdDerivativePoints);
         }
         xn = xn1;
         iterations++;

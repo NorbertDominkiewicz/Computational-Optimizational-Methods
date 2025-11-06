@@ -1,4 +1,4 @@
-package com.ndominkiewicz.frontend.model;
+package com.ndominkiewicz.frontend.result;
 
 import com.ndominkiewicz.frontend.utils.Point;
 

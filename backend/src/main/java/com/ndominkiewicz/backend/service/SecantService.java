@@ -1,19 +1,15 @@
 package com.ndominkiewicz.backend.service;
 
-import com.ndominkiewicz.backend.model.NewtonResult;
-import com.ndominkiewicz.backend.model.SecantResult;
+import com.ndominkiewicz.backend.result.SecantResult;
 import com.ndominkiewicz.backend.utils.Point;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import org.springframework.stereotype.Service;
-
+import com.ndominkiewicz.backend.model.Motionless;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-enum Motionless {
-    A, B
-}
 
 @Service
 public class SecantService {
@@ -25,6 +21,7 @@ public class SecantService {
     private Function<Double, Double> thirdDerivative;
     private List<Point> points = new ArrayList<>();
     public SecantResult solve() {
+        clearData();
         a = -6;
         b = 1;
         e = 0.001;
@@ -58,6 +55,7 @@ public class SecantService {
         xn = 0;
         xn1 = 0;
         iterations = 0;
+        points.clear();
     }
     private SecantResult getXn() {
         Motionless letter;

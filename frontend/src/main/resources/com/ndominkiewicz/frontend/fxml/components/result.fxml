@@ -6,11 +6,10 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<GridPane fx:id="root" styleClass="result-container" stylesheets="@../../styles/views/bipartite.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ndominkiewicz.frontend.controller.component.ResultController">
+<GridPane fx:id="root" styleClass="result-container" stylesheets="@../../styles/components/result.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ndominkiewicz.frontend.controller.component.ResultController">
    <columnConstraints>
       <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
    </columnConstraints>
@@ -19,66 +18,7 @@
       <RowConstraints minHeight="10.0" percentHeight="85.0" prefHeight="30.0" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
-      <VBox fx:id="resultContainer" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1">
-         <children>
-            <HBox alignment="CENTER" prefHeight="75.0" prefWidth="200.0">
-               <children>
-                  <Label styleClass="result-label" text="Ekstremum w: " />
-                  <Label fx:id="extremeLabel" styleClass="result-label" text="tbd" />
-               </children>
-            </HBox>
-            <HBox alignment="CENTER" prefHeight="75.0" prefWidth="200.0">
-               <children>
-                  <Label styleClass="result-label" text="Liczba iteracji: " />
-                  <Label fx:id="iterationsLabel" styleClass="result-label" text="tbd" />
-               </children>
-            </HBox>
-            <HBox>
-               <children>
-                  <HBox alignment="CENTER" prefHeight="50.0" prefWidth="150.0">
-                     <children>
-                        <Label styleClass="result-label" text="a = " />
-                        <Label fx:id="aLabel" styleClass="result-label" text="tbd" />
-                     </children>
-                  </HBox>
-                  <HBox alignment="CENTER" prefHeight="75.0" prefWidth="150.0">
-                     <children>
-                        <Label styleClass="result-label" text="b = " />
-                        <Label fx:id="bLabel" styleClass="result-label" text="tbd" />
-                     </children>
-                  </HBox>
-               </children>
-            </HBox>
-            <HBox alignment="CENTER" prefHeight="75.0" prefWidth="200.0">
-               <children>
-                  <Label styleClass="result-label" text="L =  " />
-                  <Label fx:id="lLabel" styleClass="result-label" text="tbd" />
-               </children>
-            </HBox>
-            <HBox>
-               <children>
-                  <HBox alignment="CENTER" prefHeight="50.0" prefWidth="150.0">
-                     <children>
-                        <Label styleClass="result-label" text="x1 = " />
-                        <Label styleClass="result-label" text="tbd" fx:id="x1Label" />
-                     </children>
-                  </HBox>
-                  <HBox alignment="CENTER" prefHeight="75.0" prefWidth="150.0">
-                     <children>
-                        <Label styleClass="result-label" text="x2 = " />
-                        <Label styleClass="result-label" text="tbd" fx:id="x2Label" />
-                     </children>
-                  </HBox>
-               </children>
-            </HBox>
-            <HBox alignment="CENTER" prefHeight="75.0" prefWidth="200.0">
-               <children>
-                  <Label styleClass="result-label" text="xsr =  " />
-                  <Label styleClass="result-label" text="tbd" fx:id="xsrLabel" />
-               </children>
-            </HBox>
-         </children>
-      </VBox>
+      <VBox fx:id="resultContainer" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="20.0" GridPane.rowIndex="1" />
       <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="result-header-container">
          <children>
             <Label layoutX="126.0" layoutY="27.0" styleClass="result-header" text="Wynik" />

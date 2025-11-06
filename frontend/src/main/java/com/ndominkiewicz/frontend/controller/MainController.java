@@ -1,9 +1,7 @@
 package com.ndominkiewicz.frontend.controller;
 
 import com.ndominkiewicz.frontend.Launcher;
-import com.ndominkiewicz.frontend.controller.view.BipartiteController;
-import com.ndominkiewicz.frontend.controller.view.BisectionController;
-import com.ndominkiewicz.frontend.controller.view.HomeController;
+import com.ndominkiewicz.frontend.controller.view.*;
 import com.ndominkiewicz.frontend.model.View;
 import com.ndominkiewicz.frontend.model.ViewController;
 import javafx.application.Platform;
@@ -41,6 +39,10 @@ public class MainController implements Initializable {
     @FXML private Button homeButton;
     @FXML private Button bipartiteButton;
     @FXML private Button bisectionButton;
+    @FXML private Button newtonButton;
+    @FXML private Button secantButton;
+    @FXML private Button goldenratioButton;
+    @FXML private Button fibonacciButton;
     @FXML private Button closeButton;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -54,9 +56,12 @@ public class MainController implements Initializable {
     private void initActions() {
         closeButton.setOnAction(actionEvent -> Launcher.close());
         homeButton.setOnAction(actionEvent -> changeView(View.HOME));
+        //
         bipartiteButton.setOnAction(actionEvent -> changeView(View.BIPARTITE));
         bisectionButton.setOnAction( actionEvent -> changeView(View.BISECTION));
-
+        newtonButton.setOnAction(actionEvent -> changeView(View.NEWTON));
+        secantButton.setOnAction(actionEvent -> changeView(View.SECANT));
+        goldenratioButton.setOnAction(actionEvent -> changeView(View.GOLDENRATIO));
     }
     /**
      * Method that loads up all views possible to use at once
@@ -65,6 +70,9 @@ public class MainController implements Initializable {
         initView(View.HOME);
         initView(View.BIPARTITE);
         initView(View.BISECTION);
+        initView(View.NEWTON);
+        initView(View.SECANT);
+        initView(View.GOLDENRATIO);
     }
 
     /**
@@ -90,6 +98,21 @@ public class MainController implements Initializable {
                 bisectionController.setMainController(this);
                 views.put(view, bisectionController);
             }
+            case NEWTON -> {
+                NewtonController newtonController = (NewtonController) controller;
+                newtonController.setMainController(this);
+                views.put(view, newtonController);
+            }
+            case SECANT -> {
+                SecantController secantController = (SecantController) controller;
+                secantController.setMainController(this);
+                views.put(view, secantController);
+            }
+            case GOLDENRATIO -> {
+                GoldenRatioController goldenRatioController = (GoldenRatioController) controller;
+                goldenRatioController.setMainController(this);
+                views.put(view, goldenRatioController);
+            }
         }
     }
     private ViewController getController(View view) {
@@ -99,6 +122,9 @@ public class MainController implements Initializable {
                 case HOME -> fxml = "home";
                 case BISECTION -> fxml = "bisection";
                 case BIPARTITE -> fxml = "bipartite";
+                case NEWTON -> fxml = "newton";
+                case SECANT -> fxml = "secant";
+                case GOLDENRATIO -> fxml = "goldenratio";
             }
             FXMLLoader loader = new FXMLLoader(Launcher.class.getResource("/com/ndominkiewicz/frontend/fxml/views/" + fxml + ".fxml"));
             Node node = loader.load();
@@ -136,17 +162,25 @@ public class MainController implements Initializable {
             case HOME -> Platform.runLater(() -> viewLabel.setText("Home"));
             case BIPARTITE -> Platform.runLater(() -> viewLabel.setText("Metoda Dwudzielna"));
             case BISECTION -> Platform.runLater(() -> viewLabel.setText("Metoda Bisekcji"));
+            case NEWTON -> Platform.runLater(() -> viewLabel.setText("Metoda Stycznych"));
+            case SECANT -> Platform.runLater(() -> viewLabel.setText("Metoda Siecznych"));
+            case GOLDENRATIO -> Platform.runLater(() -> viewLabel.setText("Metoda Złotego Podziału"));
         }
     }
     private void changeActiveStyle(View view) {
-        System.out.println(view);
         homeButton.getStyleClass().remove("active");
         bipartiteButton.getStyleClass().remove("active");
         bisectionButton.getStyleClass().remove("active");
+        newtonButton.getStyleClass().remove("active");
+        secantButton.getStyleClass().remove("active");
+        goldenratioButton.getStyleClass().remove("active");
         switch (view) {
             case HOME -> homeButton.getStyleClass().add("active");
             case BIPARTITE -> bipartiteButton.getStyleClass().add("active");
             case BISECTION -> bisectionButton.getStyleClass().add("active");
+            case NEWTON -> newtonButton.getStyleClass().add("active");
+            case SECANT -> secantButton.getStyleClass().add("active");
+            case GOLDENRATIO -> goldenratioButton.getStyleClass().add("active");
         }
     }
     /**

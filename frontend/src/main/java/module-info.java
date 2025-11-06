@@ -19,4 +19,5 @@ module com.ndominkiewicz.frontend {
     exports com.ndominkiewicz.frontend.controller.component;
     opens com.ndominkiewicz.frontend.model to com.fasterxml.jackson.databind;
     opens com.ndominkiewicz.frontend.utils to com.fasterxml.jackson.databind;
+    opens com.ndominkiewicz.frontend.result to com.fasterxml.jackson.databind;
 }

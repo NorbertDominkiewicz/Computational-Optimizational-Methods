@@ -7,11 +7,8 @@ import com.ndominkiewicz.frontend.controller.component.ResultController;
 import com.ndominkiewicz.frontend.exception.ServerNotConnected;
 import com.ndominkiewicz.frontend.model.*;
 import com.ndominkiewicz.frontend.result.BisectionResult;
-import com.ndominkiewicz.frontend.result.NewtonResult;
-import com.ndominkiewicz.frontend.result.SecantResult;
-import com.ndominkiewicz.frontend.service.BisectionService;
-import com.ndominkiewicz.frontend.service.NewtonService;
-import com.ndominkiewicz.frontend.service.SecantService;
+import com.ndominkiewicz.frontend.result.GoldenRatioResult;
+import com.ndominkiewicz.frontend.service.GoldenRatioService;
 import com.ndominkiewicz.frontend.utils.CustomNode;
 import com.ndominkiewicz.frontend.utils.Point;
 import javafx.application.Platform;
@@ -28,11 +25,11 @@ import javafx.scene.layout.GridPane;
 import java.net.URL;
 import java.util.*;
 
-public class BisectionController implements ViewController, MethodController {
+public class GoldenRatioController implements ViewController, MethodController {
     @FXML private GridPane root;
     @FXML private FlowPane componentsContainer;
     @FXML private BorderPane chartContainer;
-    private final BisectionService bisectionService = new BisectionService();
+    private final GoldenRatioService goldenRatioService = new GoldenRatioService();
     private final Map<Component, ComponentController> components = new TreeMap<>();
     private final NumberAxis xAxis = new NumberAxis();
     private final NumberAxis yAxis = new NumberAxis();
@@ -155,7 +152,7 @@ public class BisectionController implements ViewController, MethodController {
     }
     @Override
     public void onCalculate() {
-        BisectionResult bisectionResult = null;
+        GoldenRatioResult goldenRatioResult = null;
         EntryController entryController;
         try {
             entryController = (EntryController) components.get(Component.ENTRY);
@@ -166,29 +163,29 @@ public class BisectionController implements ViewController, MethodController {
             String equation = data[0];
             if (e.isEmpty() && a.isEmpty() && b.isEmpty() && equation.isEmpty()) {
                 // sample already with arguments
-                bisectionResult = bisectionService.calculate();
+                goldenRatioResult = goldenRatioService.calculate();
                 updateXBounds((double) -6, (double) -1);
                 updateYBounds((double) - 220, (double) 30);
-                loadPoints(bisectionResult.functionPoints(), bisectionResult.xsr(),bisectionResult.fx());
+                loadPoints(goldenRatioResult.points(), goldenRatioResult.result(), goldenRatioResult.fx());
             }
             else {
                 if (e.isEmpty()) {
-                    bisectionResult = bisectionService.calculate(Double.parseDouble(a), Double.parseDouble(b), equation);
+                    goldenRatioResult = goldenRatioService.calculate(Double.parseDouble(a), Double.parseDouble(b), equation);
                 }
                 if (e.isEmpty() && a.isEmpty() && b.isEmpty()) {
-                    bisectionResult = bisectionService.calculate(equation);
+                    goldenRatioResult = goldenRatioService.calculate(equation);
                 }
                 if (!(e.isEmpty() && a.isEmpty() && b.isEmpty() && equation.isEmpty())) {
-                    bisectionResult = bisectionService.calculate(Double.parseDouble(a), Double.parseDouble(b), Double.parseDouble(e), equation);
+                    goldenRatioResult = goldenRatioService.calculate(Double.parseDouble(a), Double.parseDouble(b), Double.parseDouble(e), equation);
                 }
                 updateXBounds(Double.parseDouble(a), Double.parseDouble(b));
-                updateYBounds(null, bisectionResult.fx());
+                updateYBounds(null, goldenRatioResult.fx());
             }
             swapComponent(Component.RESULT);
             ResultController resultController = (ResultController) components.get(Component.RESULT);
-            resultController.addResults(bisectionResult);
-            mainController.addRecentResult("Metoda siecznych: ", bisectionResult.fx());
-            if (bisectionResult == null) {
+            resultController.addResults(goldenRatioResult);
+            mainController.addRecentResult("Metoda siecznych: ", goldenRatioResult.fx());
+            if (goldenRatioResult == null) {
                 throw new ServerNotConnected("Could not connect the API");
             }
         } catch (RuntimeException e) {
@@ -217,3 +214,4 @@ public class BisectionController implements ViewController, MethodController {
     }
 
 }
+

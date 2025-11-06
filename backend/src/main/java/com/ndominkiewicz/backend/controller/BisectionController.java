@@ -1,6 +1,6 @@
 package com.ndominkiewicz.backend.controller;
 
-import com.ndominkiewicz.backend.model.BisectionResult;
+import com.ndominkiewicz.backend.result.BisectionResult;
 import com.ndominkiewicz.backend.service.BisectionService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
