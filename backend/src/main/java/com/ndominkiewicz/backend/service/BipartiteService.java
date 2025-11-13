@@ -42,7 +42,7 @@ public class BipartiteService {
         clearData();
         a = -6;
         b = -1;
-        e = 0.001;
+        e = 1;
         mode = MINMAX.MAXIMUM;
         function = x -> Math.pow(x, 3) - 3 * Math.pow(x, 2) - 20 * x + 1;
         iterations = 1;

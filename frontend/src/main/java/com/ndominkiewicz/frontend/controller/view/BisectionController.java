@@ -130,8 +130,11 @@ public class BisectionController implements ViewController, MethodController {
         series.getData().add(optimumPoint);
         series.setName("f(x) = " + optimumY);
         firstDerSeries.setName("f'(x)");
+//        if (!(chart.getData().contains(series))) {
+//            chart.getData().addAll(series, firstDerSeries);
+//        }
         if (!(chart.getData().contains(series))) {
-            chart.getData().addAll(series, firstDerSeries);
+            chart.getData().add(series);
         }
     }
 

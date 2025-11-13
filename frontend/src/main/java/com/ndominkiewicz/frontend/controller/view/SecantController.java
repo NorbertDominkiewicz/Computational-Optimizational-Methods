@@ -131,8 +131,11 @@ public class SecantController implements ViewController, MethodController {
         series.setName("f(x) = " + optimumY);
         firstDerSeries.setName("f'(x)");
         thirdDerSeries.setName("f'''(x)");
+//        if (!(chart.getData().contains(series))) {
+//            chart.getData().addAll(series, firstDerSeries, thirdDerSeries);
+//        }
         if (!(chart.getData().contains(series))) {
-            chart.getData().addAll(series, firstDerSeries, thirdDerSeries);
+            chart.getData().add(series);
         }
     }
     @Override
