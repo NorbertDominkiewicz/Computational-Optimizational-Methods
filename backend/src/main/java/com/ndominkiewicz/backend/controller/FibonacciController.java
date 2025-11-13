@@ -1,6 +1,6 @@
 package com.ndominkiewicz.backend.controller;
 
-import com.ndominkiewicz.backend.model.FibonacciResult;
+import com.ndominkiewicz.backend.result.FibonacciResult;
 import com.ndominkiewicz.backend.service.FibonacciService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,5 +22,9 @@ public class FibonacciController {
             @RequestParam String equation
     ) {
         return fibonacciService.solve(a, b, e, equation);
+    }
+    @GetMapping("/fibonacciExample")
+    public FibonacciResult solve() {
+        return fibonacciService.solve();
     }
 }

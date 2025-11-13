@@ -4,9 +4,15 @@ import com.ndominkiewicz.frontend.Launcher;
 import com.ndominkiewicz.frontend.controller.MainController;
 import com.ndominkiewicz.frontend.controller.component.EntryController;
 import com.ndominkiewicz.frontend.controller.component.ResultController;
+import com.ndominkiewicz.frontend.exception.ServerNotConnected;
 import com.ndominkiewicz.frontend.model.*;
-import com.ndominkiewicz.frontend.service.BipartiteService;
+import com.ndominkiewicz.frontend.result.BisectionResult;
+import com.ndominkiewicz.frontend.result.NewtonResult;
+import com.ndominkiewicz.frontend.result.SecantResult;
 import com.ndominkiewicz.frontend.service.BisectionService;
+import com.ndominkiewicz.frontend.service.NewtonService;
+import com.ndominkiewicz.frontend.service.SecantService;
+import com.ndominkiewicz.frontend.utils.CustomNode;
 import com.ndominkiewicz.frontend.utils.Point;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -19,96 +25,47 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
-
 import java.net.URL;
 import java.util.*;
 
-
-/**
- * @author Norbert Dominkiewicz
- */
-
-public class BisectionController implements ViewController {
+public class BisectionController implements ViewController, MethodController {
+    @FXML private GridPane root;
+    @FXML private FlowPane componentsContainer;
+    @FXML private BorderPane chartContainer;
     private final BisectionService bisectionService = new BisectionService();
     private final Map<Component, ComponentController> components = new TreeMap<>();
-    private Component currentComponent;
-    /**
-     * Controllers
-     */
+    private final NumberAxis xAxis = new NumberAxis();
+    private final NumberAxis yAxis = new NumberAxis();
+    private final LineChart<Number, Number> chart = new LineChart<>(xAxis, yAxis);
+    private final XYChart.Series<Number, Number> series = new XYChart.Series<>();
+    private final XYChart.Series<Number, Number> firstDerSeries = new XYChart.Series<>();
+    private final List<XYChart.Data<Number, Number>> functionPoints = new ArrayList<>();
     private MainController mainController;
-    /**
-     * FXML Elements
-     */
-    @FXML private BorderPane chartContainer;
-    @FXML private FlowPane componentsContainer;
-    @FXML private GridPane root;
-    /**
-     * Chart
-     */
-    private NumberAxis xAxis;
-    private NumberAxis yAxis;
-    private LineChart<Number, Number> chart;
-    private XYChart.Series<Number, Number> series = new XYChart.Series<>();
-    private List<XYChart.Data<Number, Number>> functionPoints = new ArrayList<>();
+    private Component currentComponent;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        initComponents();
-        initChart();
-        swapComponent(Component.ENTRY);
+        try {
+            initComponents();
+            setUpChart();
+            swapComponent(Component.ENTRY);
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e);
+        }
     }
+
     @Override
-    public Node getView() {
-        return root;
-    }
-    @Override
-    public ViewController getController() {
-        return this;
-    }
-    @Override
-    public void setMainController(MainController mainController) {
-        this.mainController = mainController;
-    }
-    private void initChart() {
-        xAxis = new NumberAxis();
-        yAxis = new NumberAxis();
-        chart = new LineChart<>(xAxis, yAxis);
-        chart.setAnimated(true);
-        xAxis.setLabel("x");
-        yAxis.setLabel("f(x)");
-        xAxis.setTickUnit(5);
-        xAxis.setAutoRanging(false);
-        yAxis.setAutoRanging(false);
-        chartContainer.setCenter(chart);
-    }
-    public void updateXBounds(double xMin, double xMax) {
-        Platform.runLater(() -> {
-            xAxis.setLowerBound(xMin * 2);
-            xAxis.setUpperBound(xMax < 0 ? Math.abs(xMax) : xMax * 2);
-        });
-    }
-    private void updateYBounds(double yMax) {
-        Platform.runLater(() -> {
-            yAxis.setUpperBound(yMax < 0 ? Math.abs(yMax) : yMax * 1.1115);
-        });
-    }
-    /**
-     * Method that loads up all components for this controller
-     */
-    private void initComponents() {
+    public void initComponents() {
         initComponent(Component.ENTRY);
         initComponent(Component.RESULT);
     }
-    /**
-     * Method that loads up the component given as an argument.
-     * The crucial here is method getController() which returns us controller
-     * based on view and its controller from fxml file
-     */
-    private void initComponent(Component component) {
+
+    @Override
+    public void initComponent(Component component) {
         ComponentController controller = getController(component);
         switch (component) {
             case ENTRY -> {
                 EntryController entryController = (EntryController) controller;
-                entryController.setViewController(this);
+                entryController.setMethodController(this);
                 components.put(component, entryController);
             }
             case RESULT -> {
@@ -118,20 +75,8 @@ public class BisectionController implements ViewController {
             }
         }
     }
-    private ComponentController getController(Component component) {
-        try {
-            String fxml = "";
-            switch (component) {
-                case ENTRY -> fxml = "entry";
-                case RESULT -> fxml = "result";
-            }
-            FXMLLoader loader = new FXMLLoader(Launcher.class.getResource("/com/ndominkiewicz/frontend/fxml/components/" + fxml + ".fxml"));
-            Node node = loader.load();
-            return loader.getController();
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-    }
+
+    @Override
     public void swapComponent(Component component) {
         if(!(component.equals(currentComponent))) {
             componentsContainer.getChildren().clear();
@@ -145,44 +90,141 @@ public class BisectionController implements ViewController {
             }
         }
     }
-    public MainController getMainController() {
-        return mainController;
-    }
-    public void onCalculate() {
-        swapComponent(Component.RESULT);
-        EntryController entryController = (EntryController) components.get(Component.ENTRY);
-//        if(entryController.getEquationField().getText().isEmpty()) {
-//            result = bisectionService.calculate();
-//        } else {
-//            result = bisectionService.calculate(entryController.getData());
-//        }
-        BisectionResult result = bisectionService.calculate();
-        initializeFunctionPoints(result.functionPoints(), result.xsr(), result.fx());
-        updateXBounds(-6, -1);
-        updateYBounds(result.fx());
-        ResultController resultController = (ResultController) components.get(Component.RESULT);
-        resultController.updateLabels("NaN", result.iterations(), result.a(), result.b(), -0 , -0 , -0, result.xsr());
-        mainController.addRecentResult("Metoda Bisekcji: ", result.fx());
-    }
-    private void initializeFunctionPoints(List<Point> points, double optimumX, double optimumY) {
-        functionPoints.clear();
-        series.getData().clear();
-        for (Point point : points) {
-            functionPoints.add(new XYChart.Data<>(point.getX(), point.getY()));
+
+    @Override
+    public ComponentController getController(Component component) {
+        try {
+            String fxml = "";
+            switch (component) {
+                case ENTRY -> fxml = "entry";
+                case RESULT -> fxml = "result";
+            }
+            FXMLLoader loader = new FXMLLoader(Launcher.class.getResource("/com/ndominkiewicz/frontend/fxml/components/" + fxml + ".fxml"));
+            Node node = loader.load();
+            return loader.getController();
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
         }
-        series.getData().addAll(functionPoints);
+    }
+
+    @Override
+    public void setUpChart() {
+        chart.setAnimated(true);
+        xAxis.setLabel("x");
+        xAxis.setTickUnit(5);
+        xAxis.setAutoRanging(false);
+        yAxis.setLabel("f(x)");
+        yAxis.setTickUnit(5);
+        yAxis.setAutoRanging(false);
+        if(chartContainer.getChildren().isEmpty()) {
+            chartContainer.setCenter(chart);
+        }
+    }
+    public void loadPoints(List<Point> points, List<Point> firstDerPoints, double optimumX, double optimumY) {
+        clearPoints();
+        for(Point point : points) functionPoints.add(new XYChart.Data<>(point.getX(), point.getY()));
+        for(Point point : firstDerPoints) firstDerSeries.getData().add(new XYChart.Data<>(point.getX(), point.getY()));
         XYChart.Data<Number, Number> optimumPoint = new XYChart.Data<>(optimumX, optimumY);
-        optimumPoint.setNode(createCustomNode("red"));
+        optimumPoint.setNode(CustomNode.createCircle("green"));
+        series.getData().addAll(functionPoints);
         series.getData().add(optimumPoint);
-        series.setName("Result f(x) = " + optimumY);
-        if (!chart.getData().contains(series)) {
+        series.setName("f(x) = " + optimumY);
+        firstDerSeries.setName("f'(x)");
+//        if (!(chart.getData().contains(series))) {
+//            chart.getData().addAll(series, firstDerSeries);
+//        }
+        if (!(chart.getData().contains(series))) {
             chart.getData().add(series);
         }
     }
-    private Node createCustomNode(String color) {
-        javafx.scene.shape.Circle circle = new javafx.scene.shape.Circle(5);
-        circle.setFill(javafx.scene.paint.Color.valueOf(color));
-        circle.setStroke(javafx.scene.paint.Color.BLACK);
-        return circle;
+
+    @Override
+    public void clearPoints() {
+        functionPoints.clear();
+        series.getData().clear();
+        firstDerSeries.getData().clear();
     }
+    @Override
+    public void updateXBounds(Double xMin, Double xMax) {
+        Platform.runLater(() -> {
+            if (xMin != null) xAxis.setLowerBound(xMin * 1.2);
+            if (xMax != null) xAxis.setUpperBound(xMax < 0 ? Math.abs(xMax) : xMax * 1.2);
+        });
+    }
+
+    @Override
+    public void updateYBounds(Double yMin, Double yMax) {
+        Platform.runLater(() -> {
+            if (yMin != null) yAxis.setLowerBound(yMin);
+            if (yMax != null) yAxis.setUpperBound(yMax < 0 ? Math.abs(yMax) * 2 : yMax * 3);
+        });
+    }
+    @Override
+    public void onCalculate() {
+        BisectionResult bisectionResult = null;
+        EntryController entryController;
+        try {
+            entryController = (EntryController) components.get(Component.ENTRY);
+            String [] data = entryController.getData();
+            String a = data[2];
+            String b = data[3];
+            String e = data[1];
+            String equation = data[0];
+            if (e.isEmpty() && a.isEmpty() && b.isEmpty() && equation.isEmpty()) {
+                // sample already with arguments
+                bisectionResult = bisectionService.calculate();
+                updateXBounds((double) -6, (double) -1);
+                updateYBounds((double) - 220, (double) 30);
+                loadPoints(bisectionResult.functionPoints(), bisectionResult.derFunctionPoints(), bisectionResult.xsr(),bisectionResult.fx());
+            }
+            else {
+                if (e.isEmpty()) {
+                    bisectionResult = bisectionService.calculate(Double.parseDouble(a), Double.parseDouble(b), equation);
+                }
+                if (e.isEmpty() && a.isEmpty() && b.isEmpty()) {
+                    bisectionResult = bisectionService.calculate(equation);
+                }
+                if (!(e.isEmpty() && a.isEmpty() && b.isEmpty() && equation.isEmpty())) {
+                    bisectionResult = bisectionService.calculate(Double.parseDouble(a), Double.parseDouble(b), Double.parseDouble(e), equation);
+                }
+                updateXBounds(Double.parseDouble(a), Double.parseDouble(b));
+                updateYBounds(null, bisectionResult.fx());
+            }
+            swapComponent(Component.RESULT);
+            ResultController resultController = (ResultController) components.get(Component.RESULT);
+            resultController.addResults(bisectionResult);
+            mainController.addRecentResult("Metoda siecznych: ", bisectionResult.fx());
+            if (bisectionResult == null) {
+                throw new ServerNotConnected("Could not connect the API");
+            }
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void loadPoints(List<Point> points, double optimumX, double optimumY) {
+
+    }
+
+    @Override
+    public Node getView() {
+        return root;
+    }
+
+    @Override
+    public ViewController getController() {
+        return this;
+    }
+
+    @Override
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
+    }
+
+    @Override
+    public MainController getMainController() {
+        return mainController;
+    }
+
 }

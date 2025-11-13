@@ -1,6 +1,6 @@
 package com.ndominkiewicz.backend.controller;
 
-import com.ndominkiewicz.backend.model.BipartiteResult;
+import com.ndominkiewicz.backend.result.BipartiteResult;
 import com.ndominkiewicz.backend.service.BipartiteService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,5 +21,9 @@ public class BipartiteController {
             @RequestParam double e,
             @RequestParam String equation) {
         return bipartiteService.solve(a, b, e, equation);
+    }
+    @GetMapping("/bipartiteExample")
+    public BipartiteResult solve() {
+        return bipartiteService.solve();
     }
 }

@@ -5,21 +5,15 @@
     -fx-pref-height: 560px;
 }
 
-.entry-container,
-.result-container {
+.entry-container {
     -fx-background-color: #262525;
     -fx-pref-height: 500px;
     -fx-background-radius: 36px;
     -fx-pref-width: 300px;
 }
 
-.result-header-container {
-    -fx-background-color: #171616;
-    -fx-background-radius: 36px 36px 0px 0px;
-}
 
-.entry-label,
-.result-header {
+.entry-label {
     -fx-text-fill: #E6F4EF;
     -fx-font-weight: 700;
     -fx-font-family: Carlito;

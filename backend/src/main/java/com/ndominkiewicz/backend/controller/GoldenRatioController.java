@@ -1,6 +1,6 @@
 package com.ndominkiewicz.backend.controller;
 
-import com.ndominkiewicz.backend.model.GoldenRatioResult;
+import com.ndominkiewicz.backend.result.GoldenRatioResult;
 import com.ndominkiewicz.backend.service.GoldenRatioService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,5 +23,9 @@ public class GoldenRatioController {
             @RequestParam String equation
     ) {
         return goldenRatioService.solve(a, b ,e, equation);
+    }
+    @GetMapping("/goldenratioExample")
+    public GoldenRatioResult solve() {
+        return goldenRatioService.solve();
     }
 }

@@ -2,7 +2,9 @@ package com.ndominkiewicz.frontend.controller.component;
 
 import com.ndominkiewicz.frontend.controller.view.BipartiteController;
 import com.ndominkiewicz.frontend.controller.view.BisectionController;
+import com.ndominkiewicz.frontend.controller.view.NewtonController;
 import com.ndominkiewicz.frontend.model.ComponentController;
+import com.ndominkiewicz.frontend.model.MethodController;
 import com.ndominkiewicz.frontend.model.ViewController;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -14,7 +16,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class EntryController implements ComponentController {
-    ViewController viewController;
+    MethodController methodController;
     @FXML private TextField equationField;
     @FXML private TextField epsilonField;
     @FXML private TextField aField;
@@ -24,8 +26,8 @@ public class EntryController implements ComponentController {
     public Node getView() {
         return root;
     }
-    public void setViewController(ViewController viewController) {
-        this.viewController = viewController;
+    public void setMethodController(MethodController methodController) {
+        this.methodController = methodController;
     }
     public String [] getData() {
         return new String[] {
@@ -46,13 +48,7 @@ public class EntryController implements ComponentController {
         bField.setText("");
     }
     public void initActions() {
-        runButton.setOnAction(actionEvent -> {
-            if(viewController instanceof BipartiteController bipartiteController) {
-                bipartiteController.onCalculate();
-            } else if(viewController instanceof BisectionController bisectionController) {
-                bisectionController.onCalculate();
-            }
-        });
+        runButton.setOnAction(actionEvent -> methodController.onCalculate());
     }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
