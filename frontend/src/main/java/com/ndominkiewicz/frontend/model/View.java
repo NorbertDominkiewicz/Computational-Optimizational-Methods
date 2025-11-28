@@ -8,5 +8,6 @@ public enum View {
     SECANT,
     NEWTON,
     GOLDENRATIO,
-    USER
+    USER,
+    NENEWTON
 }

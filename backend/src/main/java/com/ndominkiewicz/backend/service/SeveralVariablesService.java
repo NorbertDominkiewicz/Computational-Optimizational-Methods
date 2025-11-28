@@ -30,9 +30,9 @@ public class SeveralVariablesService {
             }
             double[][] hessian = calculateHessian(xk);
             xk1 = calculateNextPoint(xk, hessian, gradient);
-            if (distance(xk1, xk) <= epsilon) {
+            if (hasConverged(xk, xk1)) {
                 System.out.println("Zbieżność osiągnięta po " + i + " iteracjach");
-                System.out.println("Wynik: " + xk[0] + ", " + xk[1]);
+                System.out.println("Wynik: " + xk1[0] + ", " + xk1[1]);
                 return;
             }
             xk = xk1;
@@ -82,16 +82,23 @@ public class SeveralVariablesService {
         return result;
     }
     private double norm(double[] vector) {
-        return Math.sqrt(vector[0] * vector[0] + vector[1] * vector[1]);
+        return Math.max(Math.abs(vector[0]), Math.abs(vector[1]));
+    }
+
+    private boolean hasConverged(double[] xk, double[] xk1) {
+        return Math.max(Math.abs(xk1[0] - xk[0]), Math.abs(xk1[1] - xk[1])) <= epsilon;
     }
 
     private double distance(double[] a, double[] b) {
-        return Math.sqrt(Math.pow(a[0] - b[0], 2) + Math.pow(a[1] - b[1], 2));
+        return Math.abs(a[0] - b[0]);
     }
     public static void main(String [] args) {
         BiFunction<Double, Double, Double> function = (x, y) -> 10 * x * x + 12 * x * y + 10 * y * y;
         double[] x0 = {10.0, 12.0};
         SeveralVariablesService service = new SeveralVariablesService();
-        service.solve(function, x0, 0.01);
+        service.solve(function, x0, 0.000005);
+        BiFunction<Double, Double, Double> function1 =  (x, y) -> Math.pow(y, 3) + Math.pow(x, 2) - 9 * x * y - 3 * x + 2;
+        double[] x1 = {3, 7};
+        service.solve(function1, x1, 0.01);
     }
 }

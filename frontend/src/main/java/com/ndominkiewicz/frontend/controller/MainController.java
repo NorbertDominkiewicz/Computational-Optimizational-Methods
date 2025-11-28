@@ -44,6 +44,7 @@ public class MainController implements Initializable {
     @FXML private Button goldenratioButton;
     @FXML private Button fibonacciButton;
     @FXML private Button closeButton;
+    @FXML private Button nenewtonButton;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initActions();
@@ -62,6 +63,7 @@ public class MainController implements Initializable {
         newtonButton.setOnAction(actionEvent -> changeView(View.NEWTON));
         secantButton.setOnAction(actionEvent -> changeView(View.SECANT));
         goldenratioButton.setOnAction(actionEvent -> changeView(View.GOLDENRATIO));
+        nenewtonButton.setOnAction(actionEvent -> changeView(View.NENEWTON));
     }
     /**
      * Method that loads up all views possible to use at once
@@ -73,6 +75,7 @@ public class MainController implements Initializable {
         initView(View.NEWTON);
         initView(View.SECANT);
         initView(View.GOLDENRATIO);
+        initView(View.NENEWTON);
     }
 
     /**
@@ -113,6 +116,11 @@ public class MainController implements Initializable {
                 goldenRatioController.setMainController(this);
                 views.put(view, goldenRatioController);
             }
+            case NENEWTON -> {
+                NenewtonController nenewtonController = (NenewtonController) controller;
+                nenewtonController.setMainController(this);
+                views.put(view, nenewtonController);
+            }
         }
     }
     private ViewController getController(View view) {
@@ -125,6 +133,7 @@ public class MainController implements Initializable {
                 case NEWTON -> fxml = "newton";
                 case SECANT -> fxml = "secant";
                 case GOLDENRATIO -> fxml = "goldenratio";
+                case NENEWTON -> fxml = "nenewton";
             }
             FXMLLoader loader = new FXMLLoader(Launcher.class.getResource("/com/ndominkiewicz/frontend/fxml/views/" + fxml + ".fxml"));
             Node node = loader.load();
@@ -165,6 +174,7 @@ public class MainController implements Initializable {
             case NEWTON -> Platform.runLater(() -> viewLabel.setText("Metoda Stycznych"));
             case SECANT -> Platform.runLater(() -> viewLabel.setText("Metoda Siecznych"));
             case GOLDENRATIO -> Platform.runLater(() -> viewLabel.setText("Metoda Złotego Podziału"));
+            case NENEWTON -> Platform.runLater(() -> viewLabel.setText("Metoda Newtona"));
         }
     }
     private void changeActiveStyle(View view) {
@@ -174,6 +184,7 @@ public class MainController implements Initializable {
         newtonButton.getStyleClass().remove("active");
         secantButton.getStyleClass().remove("active");
         goldenratioButton.getStyleClass().remove("active");
+        nenewtonButton.getStyleClass().remove("active");
         switch (view) {
             case HOME -> homeButton.getStyleClass().add("active");
             case BIPARTITE -> bipartiteButton.getStyleClass().add("active");
@@ -181,6 +192,7 @@ public class MainController implements Initializable {
             case NEWTON -> newtonButton.getStyleClass().add("active");
             case SECANT -> secantButton.getStyleClass().add("active");
             case GOLDENRATIO -> goldenratioButton.getStyleClass().add("active");
+            case NENEWTON -> nenewtonButton.getStyleClass().add("active");
         }
     }
     /**

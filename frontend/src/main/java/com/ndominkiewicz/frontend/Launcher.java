@@ -27,7 +27,7 @@ public class Launcher extends Application {
         instance = this;
         position = new Cords();
         stage = mainStage;
-        scene = new Scene(loadFXML());
+        scene = new Scene(loadFXML(), 0, 0);
         scene.setFill(Color.TRANSPARENT);
         stage.setTitle("SheetLab");
         stage.setScene(scene);
